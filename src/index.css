@@ -5,8 +5,18 @@
     @apply font-sans;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply min-w-[320px] min-h-screen m-0 bg-background text-foreground;
+    @apply min-w-[320px] min-h-screen m-0 bg-background text-foreground antialiased;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display), serif;
+    text-wrap: balance;
   }
 }
 
@@ -19,16 +29,22 @@
   display: none;
 }
 
-/* subtle grain texture overlay for art feel */
+/* subtle grain texture overlay for art feel — warmer, barely there */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.025;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px;
+  background-size: 180px;
+}
+
+.dark body::after {
+  opacity: 0.035;
+  mix-blend-mode: soft-light;
 }
 
 @media (prefers-reduced-motion) {
@@ -51,18 +67,40 @@ body::after {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+
+@keyframes morph {
+  0%, 100% { border-radius: 42% 58% 55% 45% / 45% 42% 58% 55%; transform: scale(1) rotate(0deg); }
+  33% { border-radius: 58% 42% 45% 55% / 55% 58% 42% 45%; transform: scale(1.02) rotate(1deg); }
+  66% { border-radius: 45% 55% 42% 58% / 58% 45% 55% 42%; transform: scale(0.98) rotate(-1deg); }
+}
+
+@keyframes morph-reverse {
+  0%, 100% { border-radius: 55% 45% 42% 58% / 58% 55% 45% 42%; }
+  50% { border-radius: 42% 58% 55% 45% / 45% 42% 58% 55%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.6deg); }
+}
+@keyframes float_reverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-0.6deg); }
+}
+@keyframes shimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.08); }
+  100% { filter: brightness(1); }
+}
+
 .lightbox-backdrop {
   animation: fade-in 0.2s ease-out;
 }
 
 .lightbox-panel {
-  animation: slide-up 0.25s ease-out;
-}
-
-@media (prefers-reduced-motion) {
-  *,
-  ::before,
-  ::after {
-    animation-duration: 0.01ms !important;
-  }
+  animation: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
