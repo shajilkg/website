@@ -104,3 +104,52 @@ body::after {
 .lightbox-panel {
   animation: slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* ── Hall of 100 — craft details ─────────────────────────── */
+.hairline { height: 1px; background: oklch(0.88 0.02 75); }
+.dark .hairline { background: oklch(0.28 0.025 42); }
+.folio { font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+.dropcap::first-letter {
+  font-family: var(--font-display), serif;
+  float: left;
+  font-size: 3.1em;
+  line-height: 0.78;
+  padding-right: 0.12em;
+  padding-top: 0.06em;
+  font-weight: 600;
+  color: oklch(0.58 0.16 38);
+}
+.dark .dropcap::first-letter { color: oklch(0.68 0.15 42); }
+
+/* torn paper edge — jagged clip like CUT & PASTE */
+.torn {
+  clip-path: polygon(0 2%, 3% 0, 7% 1.5%, 11% 0, 15% 1.8%, 19% 0.5%, 23% 1.2%, 27% 0, 31% 1.6%, 35% 0.3%, 39% 1.4%, 43% 0, 47% 1.7%, 51% 0.4%, 55% 1.3%, 59% 0, 63% 1.5%, 67% 0.6%, 71% 1.8%, 75% 0, 79% 1.2%, 83% 0.4%, 87% 1.6%, 91% 0, 95% 1.4%, 100% 1%, 100% 98%, 97% 100%, 93% 98.5%, 89% 100%, 85% 98.2%, 81% 99.5%, 77% 98%, 73% 99.2%, 69% 98.4%, 65% 100%, 61% 98.6%, 57% 99.3%, 53% 98%, 49% 99.6%, 45% 98.3%, 41% 99.8%, 37% 98.1%, 33% 99.4%, 29% 98%, 25% 99.7%, 21% 98.2%, 17% 99.1%, 13% 98.4%, 9% 99.6%, 5% 98%, 0 99%);
+}
+
+/* washi tape */
+.washi {
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+  backdrop-filter: blur(2px);
+  border-left: 1px solid rgba(255,255,255,0.6);
+  border-right: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.06);
+}
+.dark .washi { background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06)); }
+
+/* halftone dots like CUT & PASTE */
+.halftone {
+  background-image: radial-gradient(circle at 1.5px 1.5px, currentColor 1.25px, transparent 0);
+  background-size: 7px 7px;
+  opacity: 0.14;
+}
+.duotone-hover { transition: filter 0.6s ease, transform 0.6s ease; }
+.duotone-hover:hover { filter: hue-rotate(18deg) saturate(1.15) contrast(1.02); }
+
+/* stroke draw for WILDLINE dancer */
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

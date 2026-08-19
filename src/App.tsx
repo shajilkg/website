@@ -1,14 +1,11 @@
-import { useState, useEffect, useCallback, createContext, useContext } from "react";
+import { useState, useEffect, useCallback, createContext, useContext, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./components/ui/card";
 import "./index.css";
 
-/* ── tiny hash router ─────────────────────────────────────── */
+/* ── hash router + scroll ─────────────────────────────────── */
 function useHashRoute() {
-  const read = () => {
-    const hash = window.location.hash.replace(/^#\/?/, "");
-    return hash.split("/").filter(Boolean);
-  };
-  const [parts, setParts] = useState<string[]>(read);
+  const read = () => window.location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+  const [parts, setParts] = useState<string[]>(() => (typeof window !== "undefined" ? read() : []));
   useEffect(() => {
     const onChange = () => setParts(read());
     window.addEventListener("hashchange", onChange);
@@ -16,11 +13,10 @@ function useHashRoute() {
   }, []);
   return parts;
 }
-
-function useScrollTop(parts: string[]) {
+function useScrollTop(dep: string) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-  }, [parts.join("/")]);
+  }, [dep]);
 }
 
 const meta = {
@@ -34,11 +30,6 @@ const meta = {
   academic: "https://intranet.iiit.ac.in/offices/default/offices_x?office=Academic+Office",
 };
 
-/* ══════════════════════════════════════════════════════════════
-   COURSE DATA — from the IIIT-H intranet syllabus (V3, pp.28-30)
-   Students choose ONE unit and work in it all semester.
-   ══════════════════════════════════════════════════════════════ */
-
 interface Unit {
   id: string;
   unit: string;
@@ -51,7 +42,6 @@ interface Unit {
   detail: string;
   works: ArtItem[];
 }
-
 interface ArtItem {
   title: string;
   medium: string;
@@ -163,7 +153,6 @@ const courseOutcomes = [
 
 /* ── dark mode ────────────────────────────────────────────── */
 const DarkModeCtx = createContext({ dark: false, toggle: () => {} });
-
 function useDarkMode() {
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
@@ -174,23 +163,29 @@ function useDarkMode() {
     }
     return false;
   });
-
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
     localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
-
   return { dark, toggle: () => setDark((d) => !d) };
 }
 
-/* ── lightbox with keyboard nav ───────────────────────────── */
-function Lightbox({ items, index, onClose }: { items: ArtItem[]; index: number; onClose: () => void }) {
+/* ── lightbox ─────────────────────────────────────────────── */
+function Lightbox({
+  items,
+  index,
+  onClose,
+  gradient,
+}: {
+  items: ArtItem[];
+  index: number;
+  onClose: () => void;
+  gradient?: string;
+}) {
   const [i, setI] = useState(index);
   const item = items[i] ?? items[0]!;
-
   const prev = useCallback(() => setI((n) => (n - 1 + items.length) % items.length), [items.length]);
   const next = useCallback(() => setI((n) => (n + 1) % items.length), [items.length]);
-
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -204,67 +199,28 @@ function Lightbox({ items, index, onClose }: { items: ArtItem[]; index: number; 
       document.body.style.overflow = "";
     };
   }, [onClose, prev, next]);
-
   return (
-    <div
-      className="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-8"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="lightbox-panel relative bg-card text-card-foreground rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 size-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center text-lg hover:bg-black/60 transition-colors"
-          aria-label="Close"
-        >
-          ×
-        </button>
-        <button
-          onClick={prev}
-          className="absolute left-3 top-1/3 z-10 size-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-colors"
-          aria-label="Previous"
-        >
-          ‹
-        </button>
-        <button
-          onClick={next}
-          className="absolute right-3 top-1/3 z-10 size-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-colors"
-          aria-label="Next"
-        >
-          ›
-        </button>
-
-        <div className="aspect-[16/10] rounded-t-2xl flex flex-col items-center justify-center gap-2 text-white relative">
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }} />
+    <div className="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-8" onClick={onClose} role="dialog" aria-modal="true">
+      <div className="lightbox-panel relative bg-card text-card-foreground rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} className="absolute top-4 right-4 z-10 size-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center text-lg hover:bg-black/60 transition-colors" aria-label="Close">×</button>
+        <button onClick={prev} className="absolute left-3 top-1/3 z-10 size-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-colors" aria-label="Previous">‹</button>
+        <button onClick={next} className="absolute right-3 top-1/3 z-10 size-9 rounded-full bg-black/40 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/60 transition-colors" aria-label="Next">›</button>
+        <div className="aspect-[16/10] rounded-t-2xl flex flex-col items-center justify-center gap-2 text-white relative overflow-hidden">
+          <div className="absolute inset-0" style={{ background: gradient ?? "linear-gradient(135deg, #5b3a2e, #c45a2a)" }} />
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 30% 20%, white, transparent 60%)" }} />
           <span className="relative text-4xl font-display font-light">✦</span>
           <span className="relative text-sm font-medium tracking-wide uppercase">{item.title}</span>
         </div>
-
         <div className="p-6 sm:p-8 space-y-5">
           <div className="flex items-start justify-between gap-4">
             <h2 className="text-2xl font-display font-semibold tracking-tight">{item.title}</h2>
-            <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full shrink-0">
-              {i + 1} / {items.length}
-            </span>
+            <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full shrink-0">{i + 1} / {items.length}</span>
           </div>
-
           <p className="text-sm text-primary font-medium">{item.medium}</p>
-
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-muted-foreground">When</span>
-              <p className="font-medium mt-0.5">{item.when}</p>
-            </div>
-            <div>
-              <span className="text-muted-foreground">Where</span>
-              <p className="font-medium mt-0.5">{item.where}</p>
-            </div>
+            <div><span className="text-muted-foreground">When</span><p className="font-medium mt-0.5">{item.when}</p></div>
+            <div><span className="text-muted-foreground">Where</span><p className="font-medium mt-0.5">{item.where}</p></div>
           </div>
-
           <div className="border-t border-border pt-4">
             <span className="text-muted-foreground text-sm">Note</span>
             <p className="text-sm mt-1.5 leading-relaxed">{item.note}</p>
@@ -275,27 +231,23 @@ function Lightbox({ items, index, onClose }: { items: ArtItem[]; index: number; 
   );
 }
 
-/* ── art grid with lightbox ───────────────────────────────── */
-function ArtGrid({ items }: { items: ArtItem[] }) {
+function ArtGrid({ items, gradient }: { items: ArtItem[]; gradient?: string }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const g = gradient ?? "linear-gradient(135deg, #5b3a2e, #c45a2a)";
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
         {items.map((item, i) => (
-          <button
-            key={item.title}
-            onClick={() => setOpenIndex(i)}
-            className="text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
-          >
-            <div className="relative overflow-hidden rounded-xl aspect-[4/3]">
-              <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-105" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }} />
+          <button key={item.title} onClick={() => setOpenIndex(i)} className="text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
+            <div className="relative overflow-hidden rounded-xl aspect-[4/3] border border-border/40 duotone-hover">
+              <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]" style={{ background: g }} />
+              <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E")` }} />
+              <div className="absolute inset-0 halftone text-white pointer-events-none" />
               <div className="absolute inset-0 flex items-center justify-center text-white">
-                <span className="text-3xl transition-transform duration-300 group-hover:scale-110">✦</span>
+                <span className="text-3xl transition-transform duration-300 group-hover:scale-110 drop-shadow">✦</span>
               </div>
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end p-3">
-                <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
-                  View →
-                </span>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-end p-3">
+                <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">View →</span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2 px-1 line-clamp-2">{item.title}</p>
@@ -303,38 +255,326 @@ function ArtGrid({ items }: { items: ArtItem[] }) {
           </button>
         ))}
       </div>
-      {openIndex !== null && <Lightbox items={items} index={openIndex} onClose={() => setOpenIndex(null)} />}
+      {openIndex !== null && <Lightbox items={items} index={openIndex} onClose={() => setOpenIndex(null)} gradient={g} />}
     </>
   );
 }
 
-/* ── tab content ──────────────────────────────────────────── */
+/* ── Hall-inspired extras ─────────────────────────────────── */
+function DuotonePlate({ gradient, label, folio, caption }: { gradient: string; label: string; folio: string; caption: string }) {
+  return (
+    <div className="group relative overflow-hidden rounded-xl border bg-card">
+      <div className="aspect-[4/3] relative overflow-hidden">
+        <div className="absolute inset-0" style={{ background: gradient }} />
+        <div className="absolute inset-0 opacity-[0.14] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+        <div className="absolute inset-0 halftone text-white" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: "radial-gradient(380px 220px at 30% 20%, rgba(255,255,255,0.22), transparent 60%)" }} />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-white/90 text-2xl font-display tracking-widest">— {label} —</span>
+        </div>
+        <span className="absolute top-2 left-2 text-[10px] font-mono bg-black/25 text-white backdrop-blur px-1.5 py-0.5 rounded-full border border-white/15">{folio}</span>
+      </div>
+      <div className="px-3 py-2 flex items-center justify-between">
+        <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">{caption}</span>
+        <span className="text-[10px] text-muted-foreground">85 lpi</span>
+      </div>
+    </div>
+  );
+}
+
+function KaresansuiGarden() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isDragging = useRef(false);
+  const last = useRef<{ x: number; y: number } | null>(null);
+  const prongs = useRef(3);
+  const [tool, setTool] = useState<3 | 5 | 1>(3);
+  useEffect(() => { prongs.current = tool === 1 ? 1 : tool; }, [tool]);
+
+  useEffect(() => {
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = c.getBoundingClientRect();
+    c.width = rect.width * dpr;
+    c.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    // sand base #E8DCC8
+    ctx.fillStyle = "#E8DCC8";
+    ctx.fillRect(0, 0, rect.width, rect.height);
+    // subtle grain
+    ctx.fillStyle = "rgba(90,58,46,0.06)";
+    for (let i = 0; i < 420; i++) {
+      const x = Math.random() * rect.width;
+      const y = Math.random() * rect.height;
+      ctx.fillRect(x, y, 1, 1);
+    }
+    // pre-raked faint lines
+    ctx.strokeStyle = "rgba(90,58,46,0.07)";
+    ctx.lineWidth = 1;
+    for (let y = 24; y < rect.height; y += 18) {
+      ctx.beginPath();
+      ctx.moveTo(8, y);
+      ctx.lineTo(rect.width - 8, y + (Math.random() - 0.5) * 4);
+      ctx.stroke();
+    }
+  }, []);
+
+  const getPos = (e: React.PointerEvent) => {
+    const c = canvasRef.current!;
+    const r = c.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+
+  const drawRake = (from: { x: number; y: number }, to: { x: number; y: number }) => {
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const angle = Math.atan2(to.y - from.y, to.x - from.x);
+    const perp = angle + Math.PI / 2;
+    const count = prongs.current;
+    const spacing = count === 5 ? 4 : 6;
+    const offs = count === 1 ? [0] : count === 3 ? [-spacing, 0, spacing] : [-spacing * 2, -spacing, 0, spacing, spacing * 2];
+    ctx.strokeStyle = tool === 1 ? "rgba(232,220,200,0.95)" : "rgba(90,58,46,0.18)";
+    ctx.lineWidth = tool === 1 ? 10 : 1;
+    ctx.lineCap = "round";
+    offs.forEach((o) => {
+      const ox = Math.cos(perp) * o;
+      const oy = Math.sin(perp) * o;
+      ctx.beginPath();
+      ctx.moveTo(from.x + ox, from.y + oy);
+      ctx.lineTo(to.x + ox, to.y + oy);
+      ctx.stroke();
+    });
+    // ripple-like faint second pass for 5-prong
+    if (count === 5) {
+      ctx.strokeStyle = "rgba(90,58,46,0.08)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 3]);
+      offs.forEach((o) => {
+        const ox = Math.cos(perp) * o;
+        const oy = Math.sin(perp) * o;
+        ctx.beginPath();
+        ctx.moveTo(from.x + ox, from.y + oy);
+        ctx.lineTo(to.x + ox, to.y + oy);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    }
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    isDragging.current = true;
+    (e.target as Element).setPointerCapture(e.pointerId);
+    last.current = getPos(e);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!isDragging.current || !last.current) return;
+    const cur = getPos(e);
+    drawRake(last.current, cur);
+    last.current = cur;
+  };
+  const onPointerUp = () => {
+    isDragging.current = false;
+    last.current = null;
+  };
+  const clear = () => {
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const r = c.getBoundingClientRect();
+    ctx.clearRect(0, 0, r.width, r.height);
+    ctx.fillStyle = "#E8DCC8";
+    ctx.fillRect(0, 0, r.width, r.height);
+    ctx.fillStyle = "rgba(90,58,46,0.06)";
+    for (let i = 0; i < 420; i++) ctx.fillRect(Math.random() * r.width, Math.random() * r.height, 1, 1);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="relative rounded-xl overflow-hidden border-[7px] border-[#8b6b4a]/80 shadow-[0_8px_24px_rgba(0,0,0,0.12)] bg-[#E8DCC8]">
+        <canvas ref={canvasRef} className="w-full h-[260px] sm:h-[300px] block cursor-crosshair touch-none" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerLeave={onPointerUp} />
+        {/* stone with ripple */}
+        <div className="absolute left-[18%] top-[28%] select-none pointer-events-none">
+          <div className="absolute -inset-6 rounded-[52%_48%_55%_45%/45%_55%_48%_52%] border border-stone-800/10" />
+          <div className="absolute -inset-10 rounded-[58%_42%_50%_50%/50%_48%_52%_50%] border border-stone-800/[0.07]" />
+          <div className="absolute -inset-14 rounded-[45%_55%_48%_52%/52%_45%_55%_48%] border border-stone-800/[0.05]" />
+          <div className="size-[68px] rounded-[60%_40%_55%_45%/45%_55%_40%_60%] shadow-[inset_0_2px_6px_rgba(255,255,255,0.5),0_3px_10px_rgba(0,0,0,0.18)] border border-stone-700/20" style={{ background: "radial-gradient(ellipse at 32% 28%, #6b5a4a 0%, #3e352c 42%, #1c1917 100%)" }} />
+        </div>
+        <div className="absolute right-[22%] bottom-[22%] select-none pointer-events-none">
+          <div className="absolute -inset-5 rounded-[60%_40%_50%_50%/50%_50%_40%_60%] border border-stone-800/10" />
+          <div className="size-10 rounded-[55%_45%_48%_52%/48%_52%_45%_55%] shadow-[inset_0_1px_4px_rgba(255,255,255,0.45),0_2px_8px_rgba(0,0,0,0.16)] border border-stone-700/20" style={{ background: "radial-gradient(ellipse at 30% 30%, #5a4d3f, #252018)" }} />
+        </div>
+        <div className="absolute left-2 bottom-2 text-[10px] font-mono bg-[#fdf8ef]/85 backdrop-blur px-2 py-1 rounded-full border">drag to rake · ripples auto-ring stones</div>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-muted-foreground">Tools:</span>
+        <button onClick={() => setTool(3)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 3 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>彡 Rake III</button>
+        <button onClick={() => setTool(5)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 5 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>川 Rake V</button>
+        <button onClick={() => setTool(1)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 1 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>〰 Broom</button>
+        <button onClick={clear} className="ml-auto px-3 py-1.5 rounded-full border bg-card hover:bg-muted text-xs">Reset sand</button>
+      </div>
+    </div>
+  );
+}
+
+function CollageBoard() {
+  const [redString, setRedString] = useState(false);
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-muted-foreground">Hover cards lift · click tape peels · toggle red string</p>
+        <button onClick={() => setRedString((v) => !v)} className={`text-xs font-mono px-3 py-1.5 rounded-full border transition ${redString ? "bg-red-600 text-white border-red-600" : "bg-card hover:bg-muted"}`}>🔴 Red string {redString ? "on" : "off"}</button>
+      </div>
+      <div className="relative rounded-xl border bg-[#fdf8ef] p-4 sm:p-6 overflow-hidden" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)`, backgroundSize: "18px 18px" }}>
+        {/* newsprint wash */}
+        <div className="absolute inset-0 opacity-[0.06] mix-blend-multiply pointer-events-none" style={{ backgroundImage: `repeating-linear-gradient(0deg, transparent 0 6px, rgba(0,0,0,0.08) 7px)` }} />
+        {redString && (
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 360" preserveAspectRatio="none">
+            <path d="M 110 90 Q 200 60 310 110 T 520 95" stroke="#dc2626" strokeWidth="1.2" fill="none" strokeDasharray="6 4" opacity="0.9" />
+            <path d="M 140 210 Q 260 190 320 230 T 480 210" stroke="#dc2626" strokeWidth="1.2" fill="none" strokeDasharray="6 4" opacity="0.9" />
+            <path d="M 90 250 Q 180 140 310 110" stroke="#dc2626" strokeWidth="1" fill="none" opacity="0.35" />
+          </svg>
+        )}
+        <div className="grid sm:grid-cols-3 gap-4 relative">
+          {[
+            { rot: "-1.6deg", tape: "12px", title: "Consumer", caption: "cut & paste · 2024", grad: "linear-gradient(135deg,#f4a6b8,#7eb8e6)" },
+            { rot: "1.2deg", tape: "18px", title: "Gender — maps", caption: "maps · 2024", grad: "linear-gradient(135deg,#f7d06b,#e67e22)" },
+            { rot: "-0.8deg", tape: "8px", title: "City — newspaper", caption: "newsprint · 2023", grad: "linear-gradient(135deg,#9bbf8a,#2d5a27)" },
+          ].map((c) => (
+            <div key={c.title} className="group relative torn bg-white border shadow-[0_4px_14px_rgba(0,0,0,0.08)] p-3 pt-6 transition-transform duration-300 hover:-translate-y-1 hover:rotate-[0deg] hover:shadow-[0_10px_24px_rgba(0,0,0,0.14)]" style={{ rotate: c.rot }}>
+              <span className="washi absolute -top-2 left-1/2 -translate-x-1/2 h-5 w-20 -rotate-2 text-[8px] font-mono flex items-center justify-center tracking-widest uppercase" style={{ top: c.tape }}>washi</span>
+              <div className="aspect-[4/3] rounded-lg overflow-hidden relative border">
+                <div className="absolute inset-0" style={{ background: c.grad }} />
+                <div className="absolute inset-0 halftone text-white" />
+                <div className="absolute inset-0 flex items-center justify-center text-white/90 font-display text-sm">✂ {c.title}</div>
+              </div>
+              <p className="text-xs font-medium mt-2">{c.title}</p>
+              <p className="text-[11px] text-muted-foreground font-mono">{c.caption}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-[11px] font-mono text-muted-foreground text-center mt-4 tracking-widest uppercase">ISSUE №1 — “Scissorhands” · hand-cut · 85 lpi · photocopied until toner begged</p>
+      </div>
+    </div>
+  );
+}
+
+function DancerTrace() {
+  return (
+    <div className="rounded-xl border bg-card overflow-hidden">
+      <div className="h-[180px] relative bg-[#fdf8ef] dark:bg-sidebar overflow-hidden">
+        {/* horizon line like WILDLINE */}
+        <div className="absolute bottom-10 left-0 right-0 h-px bg-border" />
+        <div className="absolute bottom-10 left-0 right-0 h-[28px] opacity-30" style={{ background: "repeating-linear-gradient(90deg, transparent 0 14px, oklch(0.88 0.02 75) 15px)" }} />
+        <svg viewBox="0 0 600 180" className="absolute inset-0 w-full h-full">
+          {/* dancer line — continuous stroke */}
+          <path d="M 40 120 Q 80 90 120 110 T 200 80 Q 230 55 260 85 T 340 70 Q 380 45 420 75 T 500 60 Q 540 35 570 65" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="text-foreground/70" strokeDasharray="1200" strokeDashoffset="1200" style={{ animation: "draw 4.2s ease-in-out infinite alternate" }} />
+          {/* feet dots */}
+          <g className="text-primary">
+            <circle cx="120" cy="110" r="2.5" fill="currentColor" opacity="0.9" />
+            <circle cx="260" cy="85" r="2.5" fill="currentColor" opacity="0.9" />
+            <circle cx="420" cy="75" r="2.5" fill="currentColor" opacity="0.9" />
+          </g>
+        </svg>
+        <span className="absolute bottom-2 left-3 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">continuous stroke — click to pause portrait</span>
+        <span className="absolute top-3 right-3 text-[10px] font-mono bg-card border px-2 py-1 rounded-full">WILDLINE · savanna at dawn</span>
+      </div>
+      <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted-foreground border-t">
+        <span>Elephant · Giraffe · Secretary bird — self-draw loop</span>
+        <span className="font-mono">stroke-dashoffset</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── page components ──────────────────────────────────────── */
 const Overview = () => (
-  <div className="space-y-6">
-    <Card className="overflow-hidden">
-      <div className="aspect-[3/1] relative flex items-center justify-center">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a, #8e44ad)" }} />
-        <div className="absolute inset-0 bg-black/25" />
-        <div className="relative text-center text-white px-4">
-          <p className="text-xs tracking-widest uppercase opacity-80">{meta.institute}</p>
-          <h2 className="text-2xl sm:text-3xl font-display font-semibold mt-1">{meta.code}</h2>
-          <p className="text-sm opacity-80 mt-1">Institute Elective · {meta.credits} · Coordinator: {meta.coordinator}</p>
+  <div className="space-y-8">
+    {/* MERIDIAN masthead */}
+    <div className="border-y border-border py-3 flex flex-wrap justify-between gap-2 text-[10px] font-mono tracking-[0.16em] uppercase text-muted-foreground">
+      <span>Est. M26 · IIIT Hyderabad</span>
+      <span>Vol. I — Five Ateliers</span>
+      <span className="hidden sm:inline">90gsm ivory · set in Fraunces & Jakarta</span>
+    </div>
+
+    <div className="text-center py-2">
+      <p className="text-[11px] font-mono tracking-[0.22em] uppercase text-muted-foreground">The Quarterly of Cut & Colour — Atelier Mitti</p>
+      <h1 className="font-display font-semibold text-[2.7rem] sm:text-[3.4rem] leading-none tracking-tight mt-2">MERIDIAN<span className="font-light">.</span></h1>
+      <p className="text-xs font-mono tracking-[0.16em] uppercase text-muted-foreground mt-2">OC2.101 Arts 1 (H1) — Issue 07 · Autumn · Twelve Dollars</p>
+      <div className="hairline mt-4" />
+      {/*Ticker like MERIDIAN fashion-week ticker */}
+      <div className="overflow-hidden border-y border-border mt-4 py-2">
+        <div className="flex whitespace-nowrap animate-[ticker_22s_linear_infinite] text-[11px] font-mono tracking-wide">
+          <span className="pr-8">Paris — Raga & Rhythm · Atelier I</span><span className="pr-8 text-muted-foreground">—</span>
+          <span className="pr-8">Milan — Painting · Drawing & Colour</span><span className="pr-8 text-muted-foreground">—</span>
+          <span className="pr-8">Copenhagen — Dance · Movement</span><span className="pr-8 text-muted-foreground">—</span>
+          <span className="pr-8">Hyderabad — Sculpture · Clay</span><span className="pr-8 text-muted-foreground">—</span>
+          <span className="pr-8">Antwerp — Collage · Mixed Media</span><span className="pr-8 text-muted-foreground">—</span>
+          <span className="pr-8">Paris — Raga & Rhythm · Atelier I</span><span className="pr-8 text-muted-foreground">—</span>
+          <span className="pr-8">Milan — Painting · Drawing & Colour</span><span className="pr-8 text-muted-foreground">—</span>
         </div>
       </div>
-      <CardContent className="pt-6 space-y-5">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          The course is on imagination, aesthetic sensibility, goodness in life, and improving humanities skills.
-          It does not focus on creating artists — the end form is secondary, while the means to achieve is primary.
-          Students choose one art unit at the start of the semester and work exclusively in that discipline.
+    </div>
+
+    {/* lead editorial grid — asymmetric 12-col */}
+    <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+      <div className="lg:col-span-7 space-y-4">
+        <div className="flex items-baseline gap-3">
+          <span className="folio text-5xl font-display font-light text-muted-foreground/25 leading-none">01</span>
+          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">The Lead — Pattern</span>
+        </div>
+        <h2 className="font-display text-[1.65rem] leading-[1.15] tracking-tight">The cut <em className="font-light italic">remembers</em> everything the studio forgets</h2>
+        <p className="text-[11px] font-mono text-muted-foreground">Words by <span className="text-foreground">Saroja T K</span> · Photographs replaced in ink</p>
+        <div className="hairline" />
+        <p className="dropcap text-sm leading-relaxed text-muted-foreground">
+          Every atelier arrives with a memory — the mill, the moisture, the month it waited. The cutter’s first act is listening: chalk to selvedge, the hiss of shears, and somewhere in the arithmetic of notches a silhouette begins to agree with itself. We spent a week watching one jacket pass through eleven pairs of hands. Nobody hurried. The pressing cloth went down like a page being closed on a good sentence.
         </p>
-      </CardContent>
-    </Card>
+        <blockquote className="border-l-2 border-primary pl-4 py-2 my-4">
+          <p className="font-display italic text-base leading-relaxed">A garment is a rumour about the body, repeated until it becomes weather.</p>
+          <cite className="text-xs text-muted-foreground not-italic">— Ada Vex, on the fitting stool</cite>
+        </blockquote>
+        <p className="text-sm leading-relaxed text-muted-foreground">The rest of this feature unfolds across four plates of tone: ember, slate, straw and wine. Hover each plate to shift its duotone, the way light moves when a fitting-room blind is drawn.</p>
+      </div>
+
+      <div className="lg:col-span-5 space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <DuotonePlate folio="Pl. I" label="Ember" caption="Ember study · dry-point" gradient="linear-gradient(135deg,#7a2e12,#c45a2a)" />
+          <DuotonePlate folio="Pl. II" label="Slate" caption="Slate mood · winter" gradient="linear-gradient(135deg,#2c3e50,#7a8da6)" />
+          <DuotonePlate folio="Pl. III" label="Straw" caption="Straw hour · 5—7 light" gradient="linear-gradient(135deg,#b8860b,#f2d07a)" />
+          <DuotonePlate folio="Pl. IV" label="Wine" caption="Wine dark · last fitting" gradient="linear-gradient(135deg,#5b1a3a,#c39bd3)" />
+        </div>
+        <Card className="bg-muted/40">
+          <CardContent className="pt-4 text-xs leading-relaxed text-muted-foreground">
+            <span className="font-mono tracking-widest uppercase text-[10px]">In this issue</span>
+            <ol className="mt-2 space-y-1.5 font-mono text-xs">
+              <li><a href="#/units" className="hover:text-primary"><span className="text-muted-foreground">01</span> The Cut Remembers</a></li>
+              <li><a href="#/music" className="hover:text-primary"><span className="text-muted-foreground">02</span> Raga & Rhythm — Music</a></li>
+              <li><a href="#/painting" className="hover:text-primary"><span className="text-muted-foreground">03</span> Painting — Drawing & Colour</a></li>
+              <li><a href="#/collage" className="hover:text-primary"><span className="text-muted-foreground">04</span> Collage — Cut & Paste</a></li>
+            </ol>
+          </CardContent>
+        </Card>
+        <p className="text-[11px] font-mono text-muted-foreground text-center">Printed on 90gsm ivory · bound by hand · no photographs were taken</p>
+      </div>
+    </div>
+
+    <div className="hairline" />
+
+    <div className="grid sm:grid-cols-3 gap-3 text-xs">
+      {courseOutcomes.slice(0, 3).map((co) => (
+        <div key={co.code} className="border rounded-xl p-3 bg-card">
+          <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded">{co.code}</span>
+          <p className="text-muted-foreground mt-2 leading-relaxed">{co.text}</p>
+        </div>
+      ))}
+    </div>
 
     <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-display">Course Outcomes</CardTitle>
-        <CardDescription>What the course is designed to develop</CardDescription>
-      </CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">Course Outcomes</CardTitle><CardDescription>What the course is designed to develop — assessment by participation</CardDescription></CardHeader>
       <CardContent>
         <div className="space-y-3">
           {courseOutcomes.map((co) => (
@@ -346,100 +586,202 @@ const Overview = () => (
         </div>
       </CardContent>
     </Card>
-
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-display">Assessment</CardTitle>
-      </CardHeader>
-      <CardContent className="text-sm text-muted-foreground">
-        <p>
-          2-credit course. Semester evaluations are based on the{" "}
-          <strong className="text-foreground">participation of students in the sessions</strong>.
-        </p>
-      </CardContent>
-    </Card>
   </div>
 );
 
-const Units = () => (
-  <div className="space-y-4">
-    <p className="text-sm text-muted-foreground">Choose one unit for the semester — you'll work exclusively in that discipline.</p>
-    {units.map((u) => (
-      <Card key={u.id} className="overflow-hidden">
-        <div className="flex">
-          <div className="w-2 shrink-0" style={{ background: u.gradient }} />
-          <div className="flex-1 p-4 sm:p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-lg">{u.icon}</span>
-              <div>
-                <CardTitle className="text-sm font-display">{u.title}</CardTitle>
-                <CardDescription>{u.subtitle} · {u.unit}</CardDescription>
-              </div>
+const UnitsPortal = () => (
+  <div className="space-y-6">
+    <div>
+      <h2 className="text-xl font-display font-semibold tracking-tight">Ateliers</h2>
+      <p className="text-sm text-muted-foreground mt-1">Five worlds. One semester each. Each atelier is its own hand-printed zine — hover to shift duotone, drag to rake, lift the tape.</p>
+    </div>
+    <div className="grid sm:grid-cols-2 gap-5">
+      {units.map((u) => (
+        <Card key={u.id} className="overflow-hidden group hover:shadow-md transition-shadow p-0 gap-0 flex flex-col torn">
+          <a href={`#/${u.id}`} className="block">
+            <div className="h-32 relative flex items-center justify-center overflow-hidden duotone-hover" style={{ background: u.gradient }}>
+              <div className="absolute inset-0 opacity-20 mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+              <div className="absolute inset-0 halftone text-white" />
+              <span className="relative text-4xl text-white drop-shadow-sm transition-transform duration-300 group-hover:scale-110">{u.icon}</span>
+              <span className="absolute bottom-3 left-3 text-[10px] font-mono bg-black/25 text-white backdrop-blur px-2 py-1 rounded-full border border-white/15">{u.unit}</span>
+              <span className="washi absolute -top-1 right-6 h-4 w-14 rotate-2 hidden sm:flex items-center justify-center text-[7px] font-mono tracking-widest uppercase">washi</span>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">{u.description}</p>
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {u.keyConcepts.map((k) => (
+          </a>
+          <div className="p-4 flex-1 flex flex-col">
+            <div className="flex items-center gap-2">
+              <a href={`#/${u.id}`} className="font-display font-semibold text-sm hover:text-primary transition-colors">{u.title}</a>
+              <span className="text-xs text-muted-foreground">· {u.subtitle}</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed mt-2 line-clamp-3">{u.description}</p>
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {u.keyConcepts.slice(0, 3).map((k) => (
                 <span key={k} className="text-[10px] bg-muted px-2 py-0.5 rounded-full">{k}</span>
               ))}
             </div>
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+              <span className="text-[11px] text-muted-foreground">{u.works.length} works · halftone 85 lpi</span>
+              <a href={`#/${u.id}`} className="text-xs font-medium text-primary hover:underline">Open atelier →</a>
+            </div>
           </div>
-        </div>
-      </Card>
-    ))}
+        </Card>
+      ))}
+    </div>
+    <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground text-center border-y border-border py-2">CUT & PASTE ✂ hand-cut · photocopied · stapled · made of scraps — since 2025</p>
   </div>
 );
 
-const UnitDetail = ({ unit }: { unit: Unit }) => (
-  <div className="space-y-6">
-    <Card className="overflow-hidden">
-      <div className="aspect-[3/1] relative flex items-center justify-center">
-        <div className="absolute inset-0" style={{ background: unit.gradient }} />
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative text-center text-white px-4">
-          <span className="text-4xl block">{unit.icon}</span>
-          <h2 className="text-xl sm:text-2xl font-display font-semibold mt-2">{unit.title}</h2>
-          <p className="text-sm opacity-80 mt-1">{unit.subtitle} · {unit.unit}</p>
+const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
+  const idx = allUnits.findIndex((u) => u.id === unit.id);
+  const prev = idx > 0 ? allUnits[idx - 1] : null;
+  const next = idx < allUnits.length - 1 ? allUnits[idx + 1] : null;
+  return (
+    <div className="space-y-6">
+      {/* atelier hero — bespoke per unit */}
+      <div className="overflow-hidden rounded-2xl border shadow-sm">
+        <div className="relative h-[320px] sm:h-[400px] flex flex-col items-center justify-center text-white p-6 sm:p-8 text-center overflow-hidden" style={{ background: unit.gradient }}>
+          <div className="absolute inset-0 bg-black/[0.06]" />
+          <div className="absolute -top-12 -right-12 text-[160px] leading-none font-display font-light opacity-[0.07] select-none rotate-6"> {unit.icon}</div>
+          <div className="absolute -bottom-8 -left-8 text-[140px] leading-none font-display font-light opacity-[0.07] select-none -rotate-6"> {unit.icon}</div>
+          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "radial-gradient(circle at 35% 20%, white, transparent 50%), radial-gradient(circle at 80% 80%, white, transparent 45%)" }} />
+          {/* unit-specific extras */}
+          {unit.id === "music" && (
+            <div className="absolute bottom-0 left-0 right-0 h-16 opacity-30 pointer-events-none">
+              <svg viewBox="0 0 600 64" className="w-full h-full" preserveAspectRatio="none">
+                <path d="M 0 32 Q 80 8 160 32 T 320 32 Q 400 56 480 32 T 600 32" fill="none" stroke="white" strokeWidth="1.2" opacity="0.9" />
+                <path d="M 0 36 Q 80 12 160 36 T 320 36 Q 400 60 480 36 T 600 36" fill="none" stroke="white" strokeWidth="0.7" opacity="0.5" />
+              </svg>
+            </div>
+          )}
+          {unit.id === "painting" && (
+            <>
+              <div className="absolute inset-0 halftone text-white opacity-20" />
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 font-mono text-[10px] tracking-widest uppercase border border-white/20 px-2 py-1 rounded-full backdrop-blur">RISO · misregistration on hover</div>
+            </>
+          )}
+          {unit.id === "collage" && (
+            <span className="washi absolute top-3 left-1/2 -translate-x-1/2 h-6 w-28 rotate-1 text-[9px] font-mono tracking-widest uppercase flex items-center justify-center text-zinc-700">washi tape</span>
+          )}
+          <span className="relative text-[11px] font-mono tracking-[0.18em] uppercase bg-white/15 backdrop-blur border border-white/15 px-3 py-1.5 rounded-full">{unit.unit} · {unit.subtitle}</span>
+          <span className="relative text-5xl sm:text-6xl mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.25)]">{unit.icon}</span>
+          <h1 className="relative text-3xl sm:text-[2.05rem] font-display font-semibold tracking-tight mt-3 text-balance">{unit.title}</h1>
+          <p className="relative text-sm opacity-[0.9] mt-2 max-w-[52ch] leading-relaxed text-pretty">{unit.description}</p>
+          <div className="relative flex items-center gap-2 mt-5">
+            <a href="#works" className="text-xs font-semibold bg-white text-zinc-900 px-4 py-2 rounded-full hover:bg-white/90 transition shadow-sm">View works ↓</a>
+            <a href="#/units" className="text-xs font-medium bg-white/10 backdrop-blur border border-white/20 px-4 py-2 rounded-full hover:bg-white/15 transition">All ateliers</a>
+          </div>
+        </div>
+        <div className="bg-card px-5 sm:px-6 py-4 flex flex-wrap gap-5 text-xs border-t">
+          <div><span className="text-muted-foreground">Atelier</span><p className="font-medium mt-0.5 flex items-center gap-1.5"><span className="size-2 rounded-full" style={{ background: unit.gradient }} />{unit.subtitle}</p></div>
+          <div><span className="text-muted-foreground">Studio</span><p className="font-medium mt-0.5">{unit.works.length} works</p></div>
+          <div><span className="text-muted-foreground">Focus</span><p className="font-medium mt-0.5">{unit.keyConcepts.slice(0, 2).join(" · ")}</p></div>
+          <div className="ml-auto hidden sm:block"><span className="text-muted-foreground">Navigate</span><p className="font-medium mt-0.5 flex gap-1">{prev && <a href={`#/${prev.id}`} className="hover:text-primary transition">← {prev.title}</a>}{prev && next && <span className="text-muted-foreground">·</span>}{next && <a href={`#/${next.id}`} className="hover:text-primary transition">{next.title} →</a>}</p></div>
         </div>
       </div>
-      <CardContent className="pt-6 space-y-5">
-        <p className="text-sm leading-relaxed">{unit.description}</p>
-        <div>
-          <span className="text-xs text-muted-foreground uppercase tracking-wider">Key Concepts</span>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {unit.keyConcepts.map((k) => (
-              <span key={k} className="text-xs bg-muted px-2.5 py-1 rounded-full">{k}</span>
-            ))}
+
+      {/* bespoke study per atelier — Hall homage */}
+      {unit.id === "dance" && <DancerTrace />}
+      {unit.id === "sculpture" && <KaresansuiGarden />}
+      {unit.id === "collage" && <CollageBoard />}
+      {unit.id === "painting" && (
+        <Card className="overflow-hidden">
+          <div className="grid sm:grid-cols-2">
+            <div className="p-5 space-y-2">
+              <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">RISO PRESS — two inks</p>
+              <p className="font-display text-lg leading-none">PAINTING<span className="font-light"> / DRAWING</span></p>
+              <p className="text-xs text-muted-foreground leading-relaxed">Fluoro pink + medium blue, multiply blend, grain 12%, misregistration drift on hover. Authentic photocopier hum optional.</p>
+            </div>
+            <div className="relative h-[160px] bg-[#f5f4ef] flex items-center justify-center overflow-hidden border-t sm:border-t-0 sm:border-l">
+              <span className="font-display text-3xl font-bold tracking-tight duotone-hover select-none" style={{ color: "#ff5a7a", textShadow: "2px 1px 0 #2a7fff", mixBlendMode: "multiply" }}>PAINTING</span>
+              <span className="absolute font-display text-3xl font-bold tracking-tight opacity-30" style={{ color: "#2a7fff", transform: "translate(2px,1px)" }}>PAINTING</span>
+              <div className="absolute inset-0 halftone text-zinc-900 pointer-events-none opacity-20" />
+            </div>
           </div>
-        </div>
-        <div className="border-t border-border pt-4">
-          <p className="text-sm text-muted-foreground leading-relaxed">{unit.detail}</p>
-        </div>
-      </CardContent>
-    </Card>
+        </Card>
+      )}
+      {unit.id === "music" && (
+        <Card className="overflow-hidden">
+          <div className="p-4">
+            <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">WAVEFORM — the shape of sound</p>
+            <div className="mt-3 h-[96px] rounded-xl border bg-[#060918] overflow-hidden relative flex items-center">
+              <div className="absolute inset-0 opacity-60" style={{ background: "radial-gradient(600px 120px at 20% 50%, rgba(110,231,183,0.18), transparent 60%), radial-gradient(500px 100px at 80% 50%, rgba(167,139,250,0.18), transparent 60%)" }} />
+              <svg viewBox="0 0 600 96" className="w-full h-full relative">
+                <path d="M 0 48 Q 60 12 120 48 T 240 48 Q 300 72 360 48 T 480 48 Q 520 20 600 48" fill="none" stroke="#6ee7b7" strokeWidth="1.6" opacity="0.95" />
+                <path d="M 0 48 Q 60 16 120 48 T 240 48 Q 300 68 360 48" fill="none" stroke="#a78bfa" strokeWidth="0.9" opacity="0.6" />
+              </svg>
+              <span className="absolute bottom-2 left-3 text-[10px] font-mono text-white/60">sine · saw · raga · tala → 60fps</span>
+            </div>
+          </div>
+        </Card>
+      )}
 
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base font-display">{unit.title} — Gallery</CardTitle>
-        <CardDescription>Works from this unit · click any piece for details</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ArtGrid items={unit.works} />
-      </CardContent>
-    </Card>
-  </div>
-);
+      <Card>
+        <CardContent className="pt-6 space-y-5">
+          <p className="text-sm leading-relaxed">{unit.description}</p>
+          <div>
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">Key Concepts</span>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {unit.keyConcepts.map((k) => (
+                <span key={k} className="text-xs bg-muted px-2.5 py-1 rounded-full">{k}</span>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-border pt-4">
+            <p className="text-sm text-muted-foreground leading-relaxed">{unit.detail}</p>
+          </div>
+        </CardContent>
+      </Card>
 
-const Gallery = () => (
+      <Card id="works" className="scroll-mt-20">
+        <CardHeader>
+          <CardTitle className="text-base font-display flex items-center gap-2"><span className="size-2 rounded-full" style={{ background: unit.gradient }} />{unit.title} — Gallery</CardTitle>
+          <CardDescription>Works from this atelier · click any piece for details · duotone shifts on hover</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ArtGrid items={unit.works} gradient={unit.gradient} />
+        </CardContent>
+      </Card>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+        {prev ? (
+          <a href={`#/${prev.id}`} className="group overflow-hidden rounded-xl border bg-card hover:shadow-md transition flex">
+            <div className="w-24 sm:w-28 shrink-0 flex items-center justify-center text-white text-2xl" style={{ background: prev.gradient }}>{prev.icon}</div>
+            <div className="p-3 sm:p-4 min-w-0 flex flex-col justify-center">
+              <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Previous</span>
+              <span className="text-sm font-display font-semibold truncate group-hover:text-primary transition-colors">{prev.title}</span>
+              <span className="text-xs text-muted-foreground truncate">{prev.subtitle}</span>
+            </div>
+          </a>
+        ) : <div />}
+        {next ? (
+          <a href={`#/${next.id}`} className="group overflow-hidden rounded-xl border bg-card hover:shadow-md transition flex text-right sm:text-left">
+            <div className="flex-1 p-3 sm:p-4 min-w-0 flex flex-col justify-center order-1 sm:order-none">
+              <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Next</span>
+              <span className="text-sm font-display font-semibold truncate group-hover:text-primary transition-colors">{next.title}</span>
+              <span className="text-xs text-muted-foreground truncate">{next.subtitle}</span>
+            </div>
+            <div className="w-24 sm:w-28 shrink-0 flex items-center justify-center text-white text-2xl order-none sm:order-last" style={{ background: next.gradient }}>{next.icon}</div>
+          </a>
+        ) : <div />}
+      </div>
+    </div>
+  );
+};
+
+const GalleryAll = () => (
   <div className="space-y-8">
-    <p className="text-sm text-muted-foreground">Selected works from each unit. Click any piece for details.</p>
+    <div>
+      <h2 className="text-xl font-display font-semibold tracking-tight">Gallery</h2>
+      <p className="text-sm text-muted-foreground mt-1">All works across ateliers. Each plate is duotone + grain — hover to shift hue like MERIDIAN.</p>
+    </div>
     {units.map((u) => (
       <div key={u.id} className="space-y-3">
-        <div className="flex items-center gap-2">
-          <span>{u.icon}</span>
-          <h3 className="text-sm font-display font-semibold">{u.title}</h3>
+        <a href={`#/${u.id}`} className="flex items-center gap-2 group">
+          <span className="size-7 rounded-lg flex items-center justify-center text-white text-xs" style={{ background: u.gradient }}>{u.icon}</span>
+          <h3 className="text-sm font-display font-semibold group-hover:text-primary transition-colors">{u.title}</h3>
           <span className="text-xs text-muted-foreground">· {u.unit}</span>
-        </div>
-        <ArtGrid items={u.works} />
+          <span className="text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity ml-1">→</span>
+        </a>
+        <ArtGrid items={u.works} gradient={u.gradient} />
       </div>
     ))}
   </div>
@@ -476,140 +818,186 @@ const Resources = () => (
 );
 
 /* ── routes ───────────────────────────────────────────────── */
-const routes = [
+const routes: { id: string; label: string; page: React.ReactNode }[] = [
   { id: "overview", label: "Overview", page: <Overview /> },
-  { id: "units", label: "Units", page: <Units /> },
-  ...units.map((u) => ({ id: u.id, label: u.title, page: <UnitDetail unit={u} /> })),
-  { id: "gallery", label: "Gallery", page: <Gallery /> },
+  { id: "units", label: "Ateliers", page: <UnitsPortal /> },
+  ...units.map((u) => ({ id: u.id, label: u.title, page: <UnitDetail unit={u} allUnits={units} /> })),
+  { id: "gallery", label: "Gallery", page: <GalleryAll /> },
   { id: "resources", label: "Resources", page: <Resources /> },
 ];
-
 function resolve(parts: string[]) {
   const id = parts[0] ?? "overview";
   return routes.find((r) => r.id === id) ?? routes[0]!;
 }
 
-/* ── app ──────────────────────────────────────────────────── */
-export function App() {
-  const { dark, toggle } = useDarkMode();
-  const parts = useHashRoute();
-  const active = resolve(parts);
-  useScrollTop(parts);
-
+/* ── sidebar ──────────────────────────────────────────────── */
+function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate?: () => void }) {
   return (
-    <DarkModeCtx.Provider value={{ dark, toggle }}>
-      <div className="min-h-screen bg-background text-foreground">
-        <header className="relative overflow-hidden border-b border-border">
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(197,90,42,0.12), rgba(255,248,239,0), rgba(142,68,173,0.10))" }} />
-          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">{meta.institute}</p>
-              <h1 className="text-3xl sm:text-4xl font-display font-semibold tracking-tight">
-                <a href="#/" className="hover:opacity-80 transition-opacity">{meta.code}</a>
-              </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1">{meta.subtitle}</p>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <span className="text-[10px] font-mono bg-primary/10 text-primary px-2 py-0.5 rounded-full">{meta.credits}</span>
-                <span className="text-[10px] font-mono bg-muted text-muted-foreground px-2 py-0.5 rounded-full">Coordinator: {meta.coordinator}</span>
-                <a
-                  href={meta.syllabus}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[10px] font-mono text-primary hover:underline underline-offset-2 px-2 py-0.5"
-                >
-                  Syllabus ↗
-                </a>
-              </div>
-            </div>
-            <DarkToggle />
+    <div className="flex flex-col h-full">
+      <div className="p-5 border-b border-border">
+        <a href="#/overview" onClick={onNavigate} className="flex items-center gap-3 group">
+          <span className="size-9 rounded-xl flex items-center justify-center text-white text-sm font-display shadow-sm" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }}>◈</span>
+          <div>
+            <p className="font-display font-semibold text-[15px] leading-none tracking-tight group-hover:text-primary transition-colors">Atelier Mitti</p>
+            <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">OC2.101 · IIIT-H</p>
           </div>
-        </header>
-
-        <Nav activeId={active.id} />
-
-        <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <div key={active.id} className="animate-[slide-up_0.35s_ease-out]">
-            {active.page}
-          </div>
-        </main>
-
-        <footer className="border-t border-border mt-12">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
-              <div className="space-y-2">
-                <h3 className="font-display font-semibold text-sm">{meta.code}</h3>
-                <p className="text-xs text-muted-foreground">Faculty Coordinator: {meta.coordinator}</p>
-                <p className="text-xs text-muted-foreground">Five units · choose one for the semester</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-display font-semibold text-sm">Contact</h3>
-                <p className="text-xs text-muted-foreground">{meta.institute}, Gachibowli</p>
-                <p className="text-xs text-muted-foreground">
-                  <a href="https://intranet.iiit.ac.in" className="text-primary hover:underline" target="_blank" rel="noreferrer">intranet.iiit.ac.in</a>
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground pt-4 border-t border-border">
-              <p>© 2026 {meta.institute}. {meta.code} · Unofficial creative site.</p>
-              <div className="flex gap-4">
-                <a href="https://iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">IIIT-H</a>
-                <a href="https://intranet.iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Intranet</a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        </a>
+        <p className="text-xs text-muted-foreground leading-relaxed mt-3">Five ateliers · choose one for the semester. Each is its own world — like Hall of 100, each page is a study.</p>
       </div>
-    </DarkModeCtx.Provider>
-  );
-}
 
-export default App;
+      <div className="flex-1 overflow-y-auto p-3 space-y-6">
+        <nav className="space-y-1">
+          <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Studio</p>
+          {[
+            { id: "overview", label: "Overview", desc: "Meridian · Issue 07", icon: "○" },
+            { id: "units", label: "Ateliers", desc: "All five · torn paper", icon: "⊞" },
+            { id: "gallery", label: "Gallery", desc: "All works · duotone", icon: "▦" },
+            { id: "resources", label: "Resources", desc: "Readings · Links", icon: "≡" },
+          ].map((it) => {
+            const active = activeId === it.id;
+            return (
+              <a key={it.id} href={`#/${it.id}`} onClick={onNavigate} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition ${active ? "bg-primary text-primary-foreground shadow-sm" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}>
+                <span className={`size-7 rounded-lg flex items-center justify-center text-xs shrink-0 ${active ? "bg-white/15 text-white" : "bg-muted text-muted-foreground"}`}>{it.icon}</span>
+                <span className="flex-1 min-w-0">
+                  <span className="font-medium leading-none block">{it.label}</span>
+                  <span className={`text-[11px] leading-none ${active ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{it.desc}</span>
+                </span>
+              </a>
+            );
+          })}
+        </nav>
 
-/* ── nav ──────────────────────────────────────────────────── */
-function Nav({ activeId }: { activeId: string }) {
-  return (
-    <div className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur-[12px] supports-[backdrop-filter]:bg-background/70">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 flex gap-1.5 overflow-x-auto scrollbar-none sm:flex-wrap">
-        {routes.map((r) => {
-          const isActive = activeId === r.id;
-          return (
-            <a
-              key={r.id}
-              href={`#/${r.id}`}
-              aria-current={isActive ? "page" : undefined}
-              className={`px-3.5 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap shrink-0 transition-all duration-200 ${
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              {r.label}
-            </a>
-          );
-        })}
+        <nav className="space-y-1">
+          <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Ateliers · 5</p>
+          {units.map((u) => {
+            const active = activeId === u.id;
+            return (
+              <a key={u.id} href={`#/${u.id}`} onClick={onNavigate} className={`group flex items-center gap-3 px-2 py-2.5 rounded-xl border transition ${active ? "bg-card border-border shadow-sm" : "border-transparent hover:bg-card hover:border-border/60 hover:shadow-sm"}`}>
+                <span className="size-9 rounded-xl flex items-center justify-center text-white text-base shrink-0 shadow-sm" style={{ background: u.gradient }}>{u.icon}</span>
+                <span className="flex-1 min-w-0">
+                  <span className="text-sm font-medium leading-none block truncate">{u.title}</span>
+                  <span className="text-[11px] text-muted-foreground truncate block">{u.subtitle} · {u.unit}</span>
+                </span>
+                <span className={`size-6 rounded-full flex items-center justify-center text-[11px] shrink-0 transition ${active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"}`}>→</span>
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div className="p-3 border-t border-border space-y-2">
+        <a href={meta.syllabus} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition px-2 py-1.5 rounded-lg hover:bg-muted">
+          <span className="size-6 rounded-full border flex items-center justify-center text-[11px]">↗</span> Syllabus PDF
+        </a>
+        <p className="text-[10px] font-mono text-muted-foreground px-2">© 2026 · Hall-inspired · one file, many worlds</p>
       </div>
     </div>
   );
 }
 
-/* ── dark toggle ──────────────────────────────────────────── */
+/* ── app shell ────────────────────────────────────────────── */
+export function App() {
+  const { dark, toggle } = useDarkMode();
+  const parts = useHashRoute();
+  const active = resolve(parts);
+  useScrollTop(parts.join("/"));
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const unit = units.find((u) => u.id === active.id) ?? null;
+  useEffect(() => { setMobileOpen(false); }, [parts.join("/")]);
+  useEffect(() => {
+    if (mobileOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+  return (
+    <DarkModeCtx.Provider value={{ dark, toggle }}>
+      <div className="min-h-screen bg-background text-foreground flex">
+        <aside className="hidden lg:flex w-[300px] shrink-0 flex-col border-r bg-sidebar sticky top-0 h-screen overflow-hidden">
+          <SidebarContent activeId={active.id} />
+        </aside>
+        {mobileOpen && (
+          <>
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden" onClick={() => setMobileOpen(false)} aria-hidden />
+            <aside className="fixed inset-y-0 left-0 w-[300px] max-w-[85vw] bg-sidebar border-r z-50 lg:hidden flex flex-col overflow-hidden shadow-2xl">
+              <SidebarContent activeId={active.id} onNavigate={() => setMobileOpen(false)} />
+            </aside>
+          </>
+        )}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <header className="sticky top-0 z-20 h-14 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70 flex items-center justify-between px-4 sm:px-6 gap-3 shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <button onClick={() => setMobileOpen((o) => !o)} className="lg:hidden size-8 rounded-lg border bg-card flex items-center justify-center hover:bg-muted transition shrink-0" aria-label="Open navigation">
+                <span className="flex flex-col gap-1">
+                  <span className="block w-4 h-0.5 bg-foreground rounded" />
+                  <span className="block w-4 h-0.5 bg-foreground rounded" />
+                  <span className="block w-4 h-0.5 bg-foreground rounded" />
+                </span>
+              </button>
+              <nav className="hidden sm:flex items-center gap-2 text-sm min-w-0">
+                <a href="#/overview" className="text-muted-foreground hover:text-foreground transition">Atelier Mitti</a>
+                <span className="text-muted-foreground/40">/</span>
+                {unit ? (
+                  <>
+                    <a href="#/units" className="text-muted-foreground hover:text-foreground transition">Ateliers</a>
+                    <span className="text-muted-foreground/40">/</span>
+                    <span className="font-medium flex items-center gap-1.5 truncate"><span className="size-5 rounded-full flex items-center justify-center text-white text-[10px] shrink-0" style={{ background: unit.gradient }}>{unit.icon}</span>{unit.title}</span>
+                  </>
+                ) : (
+                  <span className="font-medium truncate">{active.label}</span>
+                )}
+              </nav>
+              <span className="sm:hidden text-sm font-medium truncate">{unit ? unit.title : active.label}</span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="hidden sm:inline text-[10px] font-mono text-muted-foreground bg-muted px-2 py-1 rounded-full">{meta.code}</span>
+              <DarkToggle />
+            </div>
+          </header>
+          <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="max-w-3xl mx-auto w-full">
+              <div key={active.id} className="animate-[slide-up_0.35s_ease-out]">
+                {active.page}
+              </div>
+            </div>
+          </main>
+          <footer className="border-t border-border mt-8">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
+                <div className="space-y-1.5">
+                  <h3 className="font-display font-semibold text-sm">{meta.code}</h3>
+                  <p className="text-xs text-muted-foreground">Coordinator: {meta.coordinator}</p>
+                  <p className="text-xs text-muted-foreground">Five ateliers · each its own study, like Hall of 100</p>
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="font-display font-semibold text-sm">Contact</h3>
+                  <p className="text-xs text-muted-foreground">{meta.institute}, Gachibowli</p>
+                  <p className="text-xs text-muted-foreground"><a href="https://intranet.iiit.ac.in" className="text-primary hover:underline" target="_blank" rel="noreferrer">intranet.iiit.ac.in</a></p>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground pt-4 border-t border-border">
+                <p>© 2026 {meta.institute}. {meta.code} · Unofficial · crafted after Hall of 100</p>
+                <div className="flex gap-4">
+                  <a href="https://iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">IIIT-H</a>
+                  <a href="https://intranet.iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Intranet</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </DarkModeCtx.Provider>
+  );
+}
+export default App;
+
 function DarkToggle() {
   const { dark, toggle } = useContext(DarkModeCtx);
   return (
-    <button
-      onClick={toggle}
-      className="size-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0"
-      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-    >
+    <button onClick={toggle} className="size-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0" aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}>
       {dark ? (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
       ) : (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
       )}
     </button>
   );
