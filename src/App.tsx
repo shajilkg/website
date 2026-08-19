@@ -408,14 +408,13 @@ function KaresansuiGarden() {
           <div className="absolute -inset-5 rounded-[60%_40%_50%_50%/50%_50%_40%_60%] border border-stone-800/10" />
           <div className="size-10 rounded-[55%_45%_48%_52%/48%_52%_45%_55%] shadow-[inset_0_1px_4px_rgba(255,255,255,0.45),0_2px_8px_rgba(0,0,0,0.16)] border border-stone-700/20" style={{ background: "radial-gradient(ellipse at 30% 30%, #5a4d3f, #252018)" }} />
         </div>
-        <div className="absolute left-2 bottom-2 text-[10px] font-mono bg-[#fdf8ef]/85 backdrop-blur px-2 py-1 rounded-full border">drag to rake · ripples auto-ring stones</div>
+        <div className="absolute left-2 bottom-2 text-[10px] font-mono bg-[#fdf8ef]/85 backdrop-blur px-2 py-1 rounded-full border">Drag to rake</div>
       </div>
       <div className="flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-muted-foreground">Tools:</span>
-        <button onClick={() => setTool(3)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 3 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>彡 Rake III</button>
-        <button onClick={() => setTool(5)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 5 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>川 Rake V</button>
-        <button onClick={() => setTool(1)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 1 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>〰 Broom</button>
-        <button onClick={clear} className="ml-auto px-3 py-1.5 rounded-full border bg-card hover:bg-muted text-xs">Reset sand</button>
+        <button onClick={() => setTool(3)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 3 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>Rake — 3</button>
+        <button onClick={() => setTool(5)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 5 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>Rake — 5</button>
+        <button onClick={() => setTool(1)} className={`px-3 py-1.5 rounded-full border text-xs font-medium transition ${tool === 1 ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"}`}>Broom</button>
+        <button onClick={clear} className="ml-auto px-3 py-1.5 rounded-full border bg-card hover:bg-muted text-xs">Reset</button>
       </div>
     </div>
   );
@@ -425,12 +424,10 @@ function CollageBoard() {
   const [redString, setRedString] = useState(false);
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs text-muted-foreground">Hover cards lift · click tape peels · toggle red string</p>
-        <button onClick={() => setRedString((v) => !v)} className={`text-xs font-mono px-3 py-1.5 rounded-full border transition ${redString ? "bg-red-600 text-white border-red-600" : "bg-card hover:bg-muted"}`}>🔴 Red string {redString ? "on" : "off"}</button>
+      <div className="flex justify-end">
+        <button onClick={() => setRedString((v) => !v)} className={`text-xs font-mono px-3 py-1.5 rounded-full border transition ${redString ? "bg-red-600 text-white border-red-600" : "bg-card hover:bg-muted"}`}>Connections {redString ? "on" : "off"}</button>
       </div>
       <div className="relative rounded-xl border bg-[#fdf8ef] p-4 sm:p-6 overflow-hidden" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)`, backgroundSize: "18px 18px" }}>
-        {/* newsprint wash */}
         <div className="absolute inset-0 opacity-[0.06] mix-blend-multiply pointer-events-none" style={{ backgroundImage: `repeating-linear-gradient(0deg, transparent 0 6px, rgba(0,0,0,0.08) 7px)` }} />
         {redString && (
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 360" preserveAspectRatio="none">
@@ -441,23 +438,21 @@ function CollageBoard() {
         )}
         <div className="grid sm:grid-cols-3 gap-4 relative">
           {[
-            { rot: "-1.6deg", tape: "12px", title: "Consumer", caption: "cut & paste · 2024", grad: "linear-gradient(135deg,#f4a6b8,#7eb8e6)" },
-            { rot: "1.2deg", tape: "18px", title: "Gender — maps", caption: "maps · 2024", grad: "linear-gradient(135deg,#f7d06b,#e67e22)" },
-            { rot: "-0.8deg", tape: "8px", title: "City — newspaper", caption: "newsprint · 2023", grad: "linear-gradient(135deg,#9bbf8a,#2d5a27)" },
+            { rot: "-1.6deg", tape: "12px", title: "Consumer", grad: "linear-gradient(135deg,#f4a6b8,#7eb8e6)" },
+            { rot: "1.2deg", tape: "18px", title: "Gender — maps", grad: "linear-gradient(135deg,#f7d06b,#e67e22)" },
+            { rot: "-0.8deg", tape: "8px", title: "City — newspaper", grad: "linear-gradient(135deg,#9bbf8a,#2d5a27)" },
           ].map((c) => (
             <div key={c.title} className="group relative torn bg-white border shadow-[0_4px_14px_rgba(0,0,0,0.08)] p-3 pt-6 transition-transform duration-300 hover:-translate-y-1 hover:rotate-[0deg] hover:shadow-[0_10px_24px_rgba(0,0,0,0.14)]" style={{ rotate: c.rot }}>
-              <span className="washi absolute -top-2 left-1/2 -translate-x-1/2 h-5 w-20 -rotate-2 text-[8px] font-mono flex items-center justify-center tracking-widest uppercase" style={{ top: c.tape }}>washi</span>
+              <span className="washi absolute -top-2 left-1/2 -translate-x-1/2 h-5 w-20 -rotate-2" style={{ top: c.tape }} aria-hidden />
               <div className="aspect-[4/3] rounded-lg overflow-hidden relative border">
                 <div className="absolute inset-0" style={{ background: c.grad }} />
                 <div className="absolute inset-0 halftone text-white" />
                 <div className="absolute inset-0 flex items-center justify-center text-white/90 font-display text-sm">✂ {c.title}</div>
               </div>
               <p className="text-xs font-medium mt-2">{c.title}</p>
-              <p className="text-[11px] text-muted-foreground font-mono">{c.caption}</p>
             </div>
           ))}
         </div>
-        <p className="text-[11px] font-mono text-muted-foreground text-center mt-4 tracking-widest uppercase">ISSUE №1 — “Scissorhands” · hand-cut · 85 lpi · photocopied until toner begged</p>
       </div>
     </div>
   );
@@ -467,25 +462,16 @@ function DancerTrace() {
   return (
     <div className="rounded-xl border bg-card overflow-hidden">
       <div className="h-[180px] relative bg-[#fdf8ef] dark:bg-sidebar overflow-hidden">
-        {/* horizon line like WILDLINE */}
         <div className="absolute bottom-10 left-0 right-0 h-px bg-border" />
         <div className="absolute bottom-10 left-0 right-0 h-[28px] opacity-30" style={{ background: "repeating-linear-gradient(90deg, transparent 0 14px, oklch(0.88 0.02 75) 15px)" }} />
         <svg viewBox="0 0 600 180" className="absolute inset-0 w-full h-full">
-          {/* dancer line — continuous stroke */}
           <path d="M 40 120 Q 80 90 120 110 T 200 80 Q 230 55 260 85 T 340 70 Q 380 45 420 75 T 500 60 Q 540 35 570 65" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="text-foreground/70" strokeDasharray="1200" strokeDashoffset="1200" style={{ animation: "draw 4.2s ease-in-out infinite alternate" }} />
-          {/* feet dots */}
           <g className="text-primary">
             <circle cx="120" cy="110" r="2.5" fill="currentColor" opacity="0.9" />
             <circle cx="260" cy="85" r="2.5" fill="currentColor" opacity="0.9" />
             <circle cx="420" cy="75" r="2.5" fill="currentColor" opacity="0.9" />
           </g>
         </svg>
-        <span className="absolute bottom-2 left-3 text-[10px] font-mono tracking-widest uppercase text-muted-foreground">continuous stroke — click to pause portrait</span>
-        <span className="absolute top-3 right-3 text-[10px] font-mono bg-card border px-2 py-1 rounded-full">WILDLINE · savanna at dawn</span>
-      </div>
-      <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted-foreground border-t">
-        <span>Elephant · Giraffe · Secretary bird — self-draw loop</span>
-        <span className="font-mono">stroke-dashoffset</span>
       </div>
     </div>
   );
@@ -494,93 +480,33 @@ function DancerTrace() {
 /* ── page components ──────────────────────────────────────── */
 const Overview = () => (
   <div className="space-y-8">
-    {/* MERIDIAN masthead */}
-    <div className="border-y border-border py-3 flex flex-wrap justify-between gap-2 text-[10px] font-mono tracking-[0.16em] uppercase text-muted-foreground">
-      <span>Est. M26 · IIIT Hyderabad</span>
-      <span>Vol. I — Five Ateliers</span>
-      <span className="hidden sm:inline">90gsm ivory · set in Fraunces & Jakarta</span>
-    </div>
-
-    <div className="text-center py-2">
-      <p className="text-[11px] font-mono tracking-[0.22em] uppercase text-muted-foreground">The Quarterly of Cut & Colour — Atelier Mitti</p>
-      <h1 className="font-display font-semibold text-[2.7rem] sm:text-[3.4rem] leading-none tracking-tight mt-2">MERIDIAN<span className="font-light">.</span></h1>
-      <p className="text-xs font-mono tracking-[0.16em] uppercase text-muted-foreground mt-2">OC2.101 Arts 1 (H1) — Issue 07 · Autumn · Twelve Dollars</p>
-      <div className="hairline mt-4" />
-      {/*Ticker like MERIDIAN fashion-week ticker */}
-      <div className="overflow-hidden border-y border-border mt-4 py-2">
-        <div className="flex whitespace-nowrap animate-[ticker_22s_linear_infinite] text-[11px] font-mono tracking-wide">
-          <span className="pr-8">Paris — Raga & Rhythm · Atelier I</span><span className="pr-8 text-muted-foreground">—</span>
-          <span className="pr-8">Milan — Painting · Drawing & Colour</span><span className="pr-8 text-muted-foreground">—</span>
-          <span className="pr-8">Copenhagen — Dance · Movement</span><span className="pr-8 text-muted-foreground">—</span>
-          <span className="pr-8">Hyderabad — Sculpture · Clay</span><span className="pr-8 text-muted-foreground">—</span>
-          <span className="pr-8">Antwerp — Collage · Mixed Media</span><span className="pr-8 text-muted-foreground">—</span>
-          <span className="pr-8">Paris — Raga & Rhythm · Atelier I</span><span className="pr-8 text-muted-foreground">—</span>
-          <span className="pr-8">Milan — Painting · Drawing & Colour</span><span className="pr-8 text-muted-foreground">—</span>
+    <Card className="overflow-hidden">
+      <div className="aspect-[3/1] relative flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a, #8e44ad)" }} />
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative text-center text-white px-4">
+          <p className="text-xs tracking-widest uppercase opacity-80">{meta.institute}</p>
+          <h1 className="text-2xl sm:text-3xl font-display font-semibold mt-1">{meta.code}</h1>
+          <p className="text-sm opacity-80 mt-1">Institute Elective · {meta.credits} · Coordinator: {meta.coordinator}</p>
         </div>
       </div>
-    </div>
-
-    {/* lead editorial grid — asymmetric 12-col */}
-    <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
-      <div className="lg:col-span-7 space-y-4">
-        <div className="flex items-baseline gap-3">
-          <span className="folio text-5xl font-display font-light text-muted-foreground/25 leading-none">01</span>
-          <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">The Lead — Pattern</span>
-        </div>
-        <h2 className="font-display text-[1.65rem] leading-[1.15] tracking-tight">The cut <em className="font-light italic">remembers</em> everything the studio forgets</h2>
-        <p className="text-[11px] font-mono text-muted-foreground">Words by <span className="text-foreground">Saroja T K</span> · Photographs replaced in ink</p>
-        <div className="hairline" />
-        <p className="dropcap text-sm leading-relaxed text-muted-foreground">
-          Every atelier arrives with a memory — the mill, the moisture, the month it waited. The cutter’s first act is listening: chalk to selvedge, the hiss of shears, and somewhere in the arithmetic of notches a silhouette begins to agree with itself. We spent a week watching one jacket pass through eleven pairs of hands. Nobody hurried. The pressing cloth went down like a page being closed on a good sentence.
+      <CardContent className="pt-6 space-y-4">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          The course is on imagination, aesthetic sensibility, goodness in life, and improving humanities skills. It does not focus on creating artists — the end form is secondary, while the means to achieve is primary. Students choose one art unit at the start of the semester and work exclusively in that discipline.
         </p>
-        <blockquote className="border-l-2 border-primary pl-4 py-2 my-4">
-          <p className="font-display italic text-base leading-relaxed">A garment is a rumour about the body, repeated until it becomes weather.</p>
-          <cite className="text-xs text-muted-foreground not-italic">— Ada Vex, on the fitting stool</cite>
-        </blockquote>
-        <p className="text-sm leading-relaxed text-muted-foreground">The rest of this feature unfolds across four plates of tone: ember, slate, straw and wine. Hover each plate to shift its duotone, the way light moves when a fitting-room blind is drawn.</p>
-      </div>
-
-      <div className="lg:col-span-5 space-y-4">
-        <div className="grid grid-cols-2 gap-3">
-          <DuotonePlate folio="Pl. I" label="Ember" caption="Ember study · dry-point" gradient="linear-gradient(135deg,#7a2e12,#c45a2a)" />
-          <DuotonePlate folio="Pl. II" label="Slate" caption="Slate mood · winter" gradient="linear-gradient(135deg,#2c3e50,#7a8da6)" />
-          <DuotonePlate folio="Pl. III" label="Straw" caption="Straw hour · 5—7 light" gradient="linear-gradient(135deg,#b8860b,#f2d07a)" />
-          <DuotonePlate folio="Pl. IV" label="Wine" caption="Wine dark · last fitting" gradient="linear-gradient(135deg,#5b1a3a,#c39bd3)" />
+        <div className="flex flex-wrap gap-2">
+          <a href="#ateliers" onClick={(e) => { e.preventDefault(); document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="text-xs font-medium bg-primary text-primary-foreground px-3.5 py-2 rounded-full hover:bg-primary/90 transition">Explore ateliers →</a>
+          <a href={meta.syllabus} target="_blank" rel="noreferrer" className="text-xs font-medium border bg-background px-3.5 py-2 rounded-full hover:bg-muted transition">Syllabus ↗</a>
         </div>
-        <Card className="bg-muted/40">
-          <CardContent className="pt-4 text-xs leading-relaxed text-muted-foreground">
-            <span className="font-mono tracking-widest uppercase text-[10px]">In this issue</span>
-            <ol className="mt-2 space-y-1.5 font-mono text-xs">
-              <li><a href="#ateliers" onClick={(e) => { e.preventDefault(); document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="hover:text-primary"><span className="text-muted-foreground">01</span> The Cut Remembers — Ateliers</a></li>
-              <li><a href="#/music" className="hover:text-primary"><span className="text-muted-foreground">02</span> Raga & Rhythm — Music</a></li>
-              <li><a href="#/painting" className="hover:text-primary"><span className="text-muted-foreground">03</span> Painting — Drawing & Colour</a></li>
-              <li><a href="#/collage" className="hover:text-primary"><span className="text-muted-foreground">04</span> Collage — Cut & Paste</a></li>
-            </ol>
-          </CardContent>
-        </Card>
-        <p className="text-[11px] font-mono text-muted-foreground text-center">Printed on 90gsm ivory · bound by hand · no photographs were taken</p>
-      </div>
-    </div>
-
-    <div className="hairline" />
+      </CardContent>
+    </Card>
 
     <div id="ateliers" className="scroll-mt-24">
       <UnitsPortal />
     </div>
 
-    <div className="hairline" />
-
-    <div className="grid sm:grid-cols-3 gap-3 text-xs">
-      {courseOutcomes.slice(0, 3).map((co) => (
-        <div key={co.code} className="border rounded-xl p-3 bg-card">
-          <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded">{co.code}</span>
-          <p className="text-muted-foreground mt-2 leading-relaxed">{co.text}</p>
-        </div>
-      ))}
-    </div>
-
     <Card>
-      <CardHeader><CardTitle className="text-base font-display">Course Outcomes</CardTitle><CardDescription>What the course is designed to develop — assessment by participation</CardDescription></CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">Course Outcomes</CardTitle><CardDescription>What the course is designed to develop</CardDescription></CardHeader>
       <CardContent>
         <div className="space-y-3">
           {courseOutcomes.map((co) => (
@@ -592,6 +518,13 @@ const Overview = () => (
         </div>
       </CardContent>
     </Card>
+
+    <Card>
+      <CardHeader><CardTitle className="text-base font-display">Assessment</CardTitle></CardHeader>
+      <CardContent className="text-sm text-muted-foreground">
+        <p>2-credit course. Semester evaluations are based on the <strong className="text-foreground">participation of students in the sessions</strong>.</p>
+      </CardContent>
+    </Card>
   </div>
 );
 
@@ -599,7 +532,7 @@ const UnitsPortal = () => (
   <div className="space-y-6">
     <div>
       <h2 className="text-xl font-display font-semibold tracking-tight">Ateliers</h2>
-      <p className="text-sm text-muted-foreground mt-1">Five worlds. One semester each. Each atelier is its own hand-printed zine — hover to shift duotone, drag to rake, lift the tape.</p>
+      <p className="text-sm text-muted-foreground mt-1">Five ateliers · choose one for the semester.</p>
     </div>
     <div className="grid sm:grid-cols-2 gap-5">
       {units.map((u) => (
@@ -610,7 +543,7 @@ const UnitsPortal = () => (
               <div className="absolute inset-0 halftone text-white" />
               <span className="relative text-4xl text-white drop-shadow-sm transition-transform duration-300 group-hover:scale-110">{u.icon}</span>
               <span className="absolute bottom-3 left-3 text-[10px] font-mono bg-black/25 text-white backdrop-blur px-2 py-1 rounded-full border border-white/15">{u.unit}</span>
-              <span className="washi absolute -top-1 right-6 h-4 w-14 rotate-2 hidden sm:flex items-center justify-center text-[7px] font-mono tracking-widest uppercase">washi</span>
+              <span className="washi absolute -top-1 right-6 h-4 w-14 rotate-2 hidden sm:flex" aria-hidden />
             </div>
           </a>
           <div className="p-4 flex-1 flex flex-col">
@@ -625,14 +558,13 @@ const UnitsPortal = () => (
               ))}
             </div>
             <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
-              <span className="text-[11px] text-muted-foreground">{u.works.length} works · halftone 85 lpi</span>
+              <span className="text-[11px] text-muted-foreground">{u.works.length} works</span>
               <a href={`#/${u.id}`} className="text-xs font-medium text-primary hover:underline">Open atelier →</a>
             </div>
           </div>
         </Card>
       ))}
     </div>
-    <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground text-center border-y border-border py-2">CUT & PASTE ✂ hand-cut · photocopied · stapled · made of scraps — since 2025</p>
   </div>
 );
 
@@ -658,15 +590,8 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
               </svg>
             </div>
           )}
-          {unit.id === "painting" && (
-            <>
-              <div className="absolute inset-0 halftone text-white opacity-20" />
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 font-mono text-[10px] tracking-widest uppercase border border-white/20 px-2 py-1 rounded-full backdrop-blur">RISO · misregistration on hover</div>
-            </>
-          )}
-          {unit.id === "collage" && (
-            <span className="washi absolute top-3 left-1/2 -translate-x-1/2 h-6 w-28 rotate-1 text-[9px] font-mono tracking-widest uppercase flex items-center justify-center text-zinc-700">washi tape</span>
-          )}
+          {unit.id === "painting" && <div className="absolute inset-0 halftone text-white opacity-20 pointer-events-none" />}
+          {unit.id === "collage" && <span className="washi absolute top-3 left-1/2 -translate-x-1/2 h-6 w-28 rotate-1 pointer-events-none" aria-hidden />}
           <span className="relative text-[11px] font-mono tracking-[0.18em] uppercase bg-white/15 backdrop-blur border border-white/15 px-3 py-1.5 rounded-full">{unit.unit} · {unit.subtitle}</span>
           <span className="relative text-5xl sm:text-6xl mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.25)]">{unit.icon}</span>
           <h1 className="relative text-3xl sm:text-[2.05rem] font-display font-semibold tracking-tight mt-3 text-balance">{unit.title}</h1>
@@ -684,41 +609,9 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
         </div>
       </div>
 
-      {/* bespoke study per atelier — Hall homage */}
       {unit.id === "dance" && <DancerTrace />}
       {unit.id === "sculpture" && <KaresansuiGarden />}
       {unit.id === "collage" && <CollageBoard />}
-      {unit.id === "painting" && (
-        <Card className="overflow-hidden">
-          <div className="grid sm:grid-cols-2">
-            <div className="p-5 space-y-2">
-              <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">RISO PRESS — two inks</p>
-              <p className="font-display text-lg leading-none">PAINTING<span className="font-light"> / DRAWING</span></p>
-              <p className="text-xs text-muted-foreground leading-relaxed">Fluoro pink + medium blue, multiply blend, grain 12%, misregistration drift on hover. Authentic photocopier hum optional.</p>
-            </div>
-            <div className="relative h-[160px] bg-[#f5f4ef] flex items-center justify-center overflow-hidden border-t sm:border-t-0 sm:border-l">
-              <span className="font-display text-3xl font-bold tracking-tight duotone-hover select-none" style={{ color: "#ff5a7a", textShadow: "2px 1px 0 #2a7fff", mixBlendMode: "multiply" }}>PAINTING</span>
-              <span className="absolute font-display text-3xl font-bold tracking-tight opacity-30" style={{ color: "#2a7fff", transform: "translate(2px,1px)" }}>PAINTING</span>
-              <div className="absolute inset-0 halftone text-zinc-900 pointer-events-none opacity-20" />
-            </div>
-          </div>
-        </Card>
-      )}
-      {unit.id === "music" && (
-        <Card className="overflow-hidden">
-          <div className="p-4">
-            <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">WAVEFORM — the shape of sound</p>
-            <div className="mt-3 h-[96px] rounded-xl border bg-[#060918] overflow-hidden relative flex items-center">
-              <div className="absolute inset-0 opacity-60" style={{ background: "radial-gradient(600px 120px at 20% 50%, rgba(110,231,183,0.18), transparent 60%), radial-gradient(500px 100px at 80% 50%, rgba(167,139,250,0.18), transparent 60%)" }} />
-              <svg viewBox="0 0 600 96" className="w-full h-full relative">
-                <path d="M 0 48 Q 60 12 120 48 T 240 48 Q 300 72 360 48 T 480 48 Q 520 20 600 48" fill="none" stroke="#6ee7b7" strokeWidth="1.6" opacity="0.95" />
-                <path d="M 0 48 Q 60 16 120 48 T 240 48 Q 300 68 360 48" fill="none" stroke="#a78bfa" strokeWidth="0.9" opacity="0.6" />
-              </svg>
-              <span className="absolute bottom-2 left-3 text-[10px] font-mono text-white/60">sine · saw · raga · tala → 60fps</span>
-            </div>
-          </div>
-        </Card>
-      )}
 
       <Card>
         <CardContent className="pt-6 space-y-5">
@@ -826,14 +719,14 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
             <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">OC2.101 · IIIT-H</p>
           </div>
         </a>
-        <p className="text-xs text-muted-foreground leading-relaxed mt-3">Five ateliers · choose one for the semester. Each is its own world — like Hall of 100, each page is a study.</p>
+        <p className="text-xs text-muted-foreground leading-relaxed mt-3">Five ateliers · choose one for the semester.</p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 space-y-6">
         <nav className="space-y-1">
           <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Studio</p>
           {[
-            { id: "overview", label: "Overview", desc: "Issue 07 · Ateliers inside", icon: "○" },
+            { id: "overview", label: "Overview", desc: "Course · Ateliers", icon: "○" },
             { id: "resources", label: "Resources", desc: "Readings · Links", icon: "≡" },
           ].map((it) => {
             const active = activeId === it.id;
@@ -871,7 +764,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
         <a href={meta.syllabus} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition px-2 py-1.5 rounded-lg hover:bg-muted">
           <span className="size-6 rounded-full border flex items-center justify-center text-[11px]">↗</span> Syllabus PDF
         </a>
-        <p className="text-[10px] font-mono text-muted-foreground px-2">© 2026 · Hall-inspired · one file, many worlds</p>
+        <p className="text-[10px] font-mono text-muted-foreground px-2">© 2026 IIIT-H</p>
       </div>
     </div>
   );
@@ -948,7 +841,7 @@ export function App() {
                 <div className="space-y-1.5">
                   <h3 className="font-display font-semibold text-sm">{meta.code}</h3>
                   <p className="text-xs text-muted-foreground">Coordinator: {meta.coordinator}</p>
-                  <p className="text-xs text-muted-foreground">Five ateliers · each its own study, like Hall of 100</p>
+                  <p className="text-xs text-muted-foreground">Five ateliers · choose one for the semester</p>
                 </div>
                 <div className="space-y-1.5">
                   <h3 className="font-display font-semibold text-sm">Contact</h3>
@@ -957,7 +850,7 @@ export function App() {
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground pt-4 border-t border-border">
-                <p>© 2026 {meta.institute}. {meta.code} · Unofficial · crafted after Hall of 100</p>
+                <p>© 2026 {meta.institute}. {meta.code} · Unofficial</p>
                 <div className="flex gap-4">
                   <a href="https://iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">IIIT-H</a>
                   <a href="https://intranet.iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Intranet</a>
