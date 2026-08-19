@@ -633,35 +633,12 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
       <Card id="works" className="scroll-mt-20">
         <CardHeader>
           <CardTitle className="text-base font-display flex items-center gap-2"><span className="size-2 rounded-full" style={{ background: unit.gradient }} />{unit.title} — Gallery</CardTitle>
-          <CardDescription>Works from this atelier · click any piece for details · duotone shifts on hover</CardDescription>
+          <CardDescription>Works from this atelier · click any piece for details</CardDescription>
         </CardHeader>
         <CardContent>
           <ArtGrid items={unit.works} gradient={unit.gradient} />
         </CardContent>
       </Card>
-
-      <div className="grid sm:grid-cols-2 gap-3">
-        {prev ? (
-          <a href={`#/${prev.id}`} className="group overflow-hidden rounded-xl border bg-card hover:shadow-md transition flex">
-            <div className="w-24 sm:w-28 shrink-0 flex items-center justify-center text-white text-2xl" style={{ background: prev.gradient }}>{prev.icon}</div>
-            <div className="p-3 sm:p-4 min-w-0 flex flex-col justify-center">
-              <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Previous</span>
-              <span className="text-sm font-display font-semibold truncate group-hover:text-primary transition-colors">{prev.title}</span>
-              <span className="text-xs text-muted-foreground truncate">{prev.subtitle}</span>
-            </div>
-          </a>
-        ) : <div />}
-        {next ? (
-          <a href={`#/${next.id}`} className="group overflow-hidden rounded-xl border bg-card hover:shadow-md transition flex text-right sm:text-left">
-            <div className="flex-1 p-3 sm:p-4 min-w-0 flex flex-col justify-center order-1 sm:order-none">
-              <span className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">Next</span>
-              <span className="text-sm font-display font-semibold truncate group-hover:text-primary transition-colors">{next.title}</span>
-              <span className="text-xs text-muted-foreground truncate">{next.subtitle}</span>
-            </div>
-            <div className="w-24 sm:w-28 shrink-0 flex items-center justify-center text-white text-2xl order-none sm:order-last" style={{ background: next.gradient }}>{next.icon}</div>
-          </a>
-        ) : <div />}
-      </div>
     </div>
   );
 };
