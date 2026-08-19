@@ -56,7 +56,7 @@ const units: Unit[] = [
     unit: "Unit 1",
     title: "Raga & Rhythm",
     subtitle: "Music",
-    icon: "♪",
+    icon: "fi fi-rr-music",
     gradient: "linear-gradient(135deg, #b8860b, #d4a574)",
     description:
       "Understanding the nuances of sound and timing — the basic concepts of any system of music in the world. Students learn songs, melodic exercises, and rhythmic exercises with a focus on Indian music concepts.",
@@ -74,7 +74,7 @@ const units: Unit[] = [
     unit: "Unit 2",
     title: "Painting",
     subtitle: "Drawing & Colour",
-    icon: "✎",
+    icon: "fi fi-rr-palette",
     gradient: "linear-gradient(135deg, #2d5a27, #6b8f3c)",
     description:
       "Expressing ideas and feelings through lines and colours. Basic drawing and painting skills are taught in class, with tasks including storytelling, creating logos, symbols, and portraiture.",
@@ -92,7 +92,7 @@ const units: Unit[] = [
     unit: "Unit 3",
     title: "Dance",
     subtitle: "Movement & Expression",
-    icon: "❦",
+    icon: "fi fi-rr-ballet-dance",
     gradient: "linear-gradient(135deg, #8e44ad, #c39bd3)",
     description:
       "The significance of dance and the training involved in performing dance movements — basic stretches and fundamental movements of various Indian dance forms.",
@@ -110,7 +110,7 @@ const units: Unit[] = [
     unit: "Unit 4",
     title: "Sculpture",
     subtitle: "3D Form & Clay",
-    icon: "◉",
+    icon: "fi fi-rr-sculpture",
     gradient: "linear-gradient(135deg, #2c3e50, #4ca1af)",
     description:
       "Understanding three-dimensional form and creativity. Clay modelling for self-expression and connecting to nature through the texture of clay.",
@@ -128,7 +128,7 @@ const units: Unit[] = [
     unit: "Unit 5",
     title: "Collage",
     subtitle: "Mixed Media & Commentary",
-    icon: "◫",
+    icon: "fi fi-rr-layers",
     gradient: "linear-gradient(135deg, #d35400, #e67e22)",
     description:
       "Assembling images from magazines, newspapers, photographs, maps, and diagrams by cutting, pasting, painting, or drawing to create unique compositions.",
@@ -541,7 +541,7 @@ const UnitsPortal = () => (
             <div className="h-32 relative flex items-center justify-center overflow-hidden duotone-hover" style={{ background: u.gradient }}>
               <div className="absolute inset-0 opacity-20 mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
               <div className="absolute inset-0 halftone text-white" />
-              <span className="relative text-4xl text-white drop-shadow-sm transition-transform duration-300 group-hover:scale-110">{u.icon}</span>
+              <i className={`${u.icon} relative text-4xl text-white drop-shadow-sm transition-transform duration-300 group-hover:scale-110`}></i>
               <span className="absolute bottom-3 left-3 text-[10px] font-mono bg-black/25 text-white backdrop-blur px-2 py-1 rounded-full border border-white/15">{u.unit}</span>
               <span className="washi absolute -top-1 right-6 h-4 w-14 rotate-2 hidden sm:flex" aria-hidden />
             </div>
@@ -578,8 +578,8 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
       <div className="overflow-hidden rounded-2xl border shadow-sm">
         <div className="relative h-[320px] sm:h-[400px] flex flex-col items-center justify-center text-white p-6 sm:p-8 text-center overflow-hidden" style={{ background: unit.gradient }}>
           <div className="absolute inset-0 bg-black/[0.06]" />
-          <div className="absolute -top-12 -right-12 text-[160px] leading-none font-display font-light opacity-[0.07] select-none rotate-6"> {unit.icon}</div>
-          <div className="absolute -bottom-8 -left-8 text-[140px] leading-none font-display font-light opacity-[0.07] select-none -rotate-6"> {unit.icon}</div>
+          <div className="absolute -top-12 -right-12 text-[160px] leading-none opacity-[0.07] select-none rotate-6 flex items-center justify-center"><i className={unit.icon}></i></div>
+          <div className="absolute -bottom-8 -left-8 text-[140px] leading-none opacity-[0.07] select-none -rotate-6 flex items-center justify-center"><i className={unit.icon}></i></div>
           <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "radial-gradient(circle at 35% 20%, white, transparent 50%), radial-gradient(circle at 80% 80%, white, transparent 45%)" }} />
           {/* unit-specific extras */}
           {unit.id === "music" && (
@@ -593,7 +593,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
           {unit.id === "painting" && <div className="absolute inset-0 halftone text-white opacity-20 pointer-events-none" />}
           {unit.id === "collage" && <span className="washi absolute top-3 left-1/2 -translate-x-1/2 h-6 w-28 rotate-1 pointer-events-none" aria-hidden />}
           <span className="relative text-[11px] font-mono tracking-[0.18em] uppercase bg-white/15 backdrop-blur border border-white/15 px-3 py-1.5 rounded-full">{unit.unit} · {unit.subtitle}</span>
-          <span className="relative text-5xl sm:text-6xl mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.25)]">{unit.icon}</span>
+          <i className={`${unit.icon} relative text-5xl sm:text-6xl mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.25)]`}></i>
           <h1 className="relative text-3xl sm:text-[2.05rem] font-display font-semibold tracking-tight mt-3 text-balance">{unit.title}</h1>
           <p className="relative text-sm opacity-[0.9] mt-2 max-w-[52ch] leading-relaxed text-pretty">{unit.description}</p>
           <div className="relative flex items-center gap-2 mt-5">
@@ -690,7 +690,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
     <div className="flex flex-col h-full">
       <div className="p-5 border-b border-border">
         <a href="#/overview" onClick={onNavigate} className="flex items-center gap-3 group">
-          <span className="size-9 rounded-xl flex items-center justify-center text-white text-sm font-display shadow-sm" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }}>◈</span>
+          <span className="size-9 rounded-xl flex items-center justify-center text-white text-sm shadow-sm" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }}><i className="fi fi-rr-diamond"></i></span>
           <div>
             <p className="font-display font-semibold text-[15px] leading-none tracking-tight group-hover:text-primary transition-colors">Atelier Mitti</p>
             <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">OC2.101 · IIIT-H</p>
@@ -703,13 +703,13 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
         <nav className="space-y-1">
           <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Studio</p>
           {[
-            { id: "overview", label: "Overview", desc: "Course · Ateliers", icon: "○" },
-            { id: "resources", label: "Resources", desc: "Readings · Links", icon: "≡" },
+            { id: "overview", label: "Overview", desc: "Course · Ateliers", icon: "fi fi-rr-overview" },
+            { id: "resources", label: "Resources", desc: "Readings · Links", icon: "fi fi-rr-book-open-cover" },
           ].map((it) => {
             const active = activeId === it.id;
             return (
               <a key={it.id} href={`#/${it.id}`} onClick={onNavigate} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition ${active ? "bg-primary text-primary-foreground shadow-sm" : "hover:bg-muted text-muted-foreground hover:text-foreground"}`}>
-                <span className={`size-7 rounded-lg flex items-center justify-center text-xs shrink-0 ${active ? "bg-white/15 text-white" : "bg-muted text-muted-foreground"}`}>{it.icon}</span>
+                <span className={`size-7 rounded-lg flex items-center justify-center text-xs shrink-0 ${active ? "bg-white/15 text-white" : "bg-muted text-muted-foreground"}`}><i className={it.icon}></i></span>
                 <span className="flex-1 min-w-0">
                   <span className="font-medium leading-none block">{it.label}</span>
                   <span className={`text-[11px] leading-none ${active ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{it.desc}</span>
@@ -725,7 +725,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
             const active = activeId === u.id;
             return (
               <a key={u.id} href={`#/${u.id}`} onClick={onNavigate} className={`group flex items-center gap-3 px-2 py-2.5 rounded-xl border transition ${active ? "bg-card border-border shadow-sm" : "border-transparent hover:bg-card hover:border-border/60 hover:shadow-sm"}`}>
-                <span className="size-9 rounded-xl flex items-center justify-center text-white text-base shrink-0 shadow-sm" style={{ background: u.gradient }}>{u.icon}</span>
+                <span className="size-9 rounded-xl flex items-center justify-center text-white text-base shrink-0 shadow-sm" style={{ background: u.gradient }}><i className={u.icon}></i></span>
                 <span className="flex-1 min-w-0">
                   <span className="text-sm font-medium leading-none block truncate">{u.title}</span>
                   <span className="text-[11px] text-muted-foreground truncate block">{u.subtitle} · {u.unit}</span>
@@ -792,7 +792,7 @@ export function App() {
                   <>
                     <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-muted-foreground hover:text-foreground transition">Ateliers</a>
                     <span className="text-muted-foreground/40">/</span>
-                    <span className="font-medium flex items-center gap-1.5 truncate"><span className="size-5 rounded-full flex items-center justify-center text-white text-[10px] shrink-0" style={{ background: unit.gradient }}>{unit.icon}</span>{unit.title}</span>
+                    <span className="font-medium flex items-center gap-1.5 truncate"><span className="size-5 rounded-full flex items-center justify-center text-white text-[10px] shrink-0" style={{ background: unit.gradient }}><i className={unit.icon}></i></span>{unit.title}</span>
                   </>
                 ) : (
                   <span className="font-medium truncate">{active.label}</span>
@@ -833,6 +833,7 @@ export function App() {
                   <a href="https://intranet.iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Intranet</a>
                 </div>
               </div>
+              <p className="text-[10px] text-muted-foreground/60 text-center">Icons by <a href="https://www.flaticon.com/uicons" className="underline hover:text-foreground" target="_blank" rel="noreferrer">Flaticon</a></p>
             </div>
           </footer>
         </div>
