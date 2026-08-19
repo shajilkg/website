@@ -850,7 +850,7 @@ export function App() {
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground pt-4 border-t border-border">
-                <p>© 2026 {meta.institute}. {meta.code} · Unofficial</p>
+                <p>© 2026 {meta.institute}. {meta.code}</p>
                 <div className="flex gap-4">
                   <a href="https://iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">IIIT-H</a>
                   <a href="https://intranet.iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Intranet</a>
