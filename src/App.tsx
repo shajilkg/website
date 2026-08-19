@@ -129,12 +129,13 @@ function Divider() {
 
 /* ══════════════════════════════════════════════════════════════
    COURSE DATA — from IIIT-H intranet syllabus
-   OC2.101 Arts-1 | Monsoon 2026 | Faculty: Saroja T K
+   Arts Course | Monsoon 2026 | Faculty: Saroja T K
+   Students choose ONE track and work in it all semester.
    ══════════════════════════════════════════════════════════════ */
 
-const units = [
+const tracks = [
   {
-    num: 1,
+    id: "music",
     title: "Raga & Rhythm",
     subtitle: "Music",
     icon: "♪",
@@ -144,7 +145,7 @@ const units = [
     detail: "The unique concepts of Indian music — raga and tala — are introduced to realize the depth of this system and its connections to various branches of study. Through personal demonstrations, audio, and videos of acclaimed artists, students develop artistic sensibilities, creativity, and discipline.",
   },
   {
-    num: 2,
+    id: "painting",
     title: "Painting",
     subtitle: "Drawing & Color",
     icon: "✎",
@@ -154,7 +155,7 @@ const units = [
     detail: "Students understand different ways of visual thinking through hands-on tasks. The focus is not on technical perfection but on developing the ability to communicate visually and express personal perspectives.",
   },
   {
-    num: 3,
+    id: "dance",
     title: "Dance",
     subtitle: "Movement & Expression",
     icon: "❦",
@@ -164,7 +165,7 @@ const units = [
     detail: "Students learn about various dance forms of India and their significance in the past and present. They compose movements and create their individual units of movement. Evaluation is based on participation, not dancing skills.",
   },
   {
-    num: 4,
+    id: "sculpture",
     title: "Sculpture",
     subtitle: "3D Form & Clay",
     icon: "◉",
@@ -174,7 +175,7 @@ const units = [
     detail: "Students get a personal experience of the texture of clay — an important part of understanding nature. They learn how to use different materials to make art, developing self-expression and creativity through hands-on sculptural work.",
   },
   {
-    num: 5,
+    id: "collage",
     title: "Collage",
     subtitle: "Mixed Media & Commentary",
     icon: "◫",
@@ -198,25 +199,22 @@ const Overview = () => (
   <div className="space-y-6">
     {/* course hero */}
     <Card className="overflow-hidden">
-      <div className="aspect-[3/1] bg-gradient-to-r from-amber-900 via-rose-800 to-purple-900 flex items-center justify-center relative">
+        <div className="aspect-[3/1] bg-gradient-to-r from-amber-900 via-rose-800 to-purple-900 flex items-center justify-center relative">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative text-center text-white">
-          <p className="text-xs tracking-widest uppercase opacity-70">IIIT Hyderabad — Monsoon 2026</p>
-          <h2 className="text-2xl sm:text-3xl font-bold mt-1">Arts-1</h2>
-          <p className="text-sm opacity-80 mt-1">OC2.101 · 2 Credits · Institute Elective</p>
+          <p className="text-xs tracking-widest uppercase opacity-70">IIIT Hyderabad</p>
+          <h2 className="text-2xl sm:text-3xl font-bold mt-1">Arts Course</h2>
         </div>
       </div>
       <CardContent className="pt-6 space-y-4">
-        <div className="grid sm:grid-cols-3 gap-4 text-sm">
+        <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div><span className="text-muted-foreground">Faculty</span><p className="font-medium mt-0.5">Saroja T K (Coordinator)</p></div>
-          <div><span className="text-muted-foreground">Credits</span><p className="font-medium mt-0.5">2-0-0-2</p></div>
-          <div><span className="text-muted-foreground">Prerequisites</span><p className="font-medium mt-0.5">None</p></div>
+          <div><span className="text-muted-foreground">Institute Elective</span><p className="font-medium mt-0.5">Open to all programmes</p></div>
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
           The course is on imagination, aesthetic sensibility, goodness in life, and improving humanities skills.
           It does not focus on creating artists — the end form is secondary, while the means to achieve is primary.
-          The course introduces students to the thought and process of Art creation and Art appreciation,
-          explaining the confluence of art and other popular knowledge systems.
+          Students choose one art track at the start of the semester and work exclusively in that discipline.
         </p>
       </CardContent>
     </Card>
@@ -246,52 +244,53 @@ const Overview = () => (
   </div>
 );
 
-const UnitDetail = ({ unit }: { unit: typeof units[number] }) => (
+const TrackDetail = ({ track }: { track: typeof tracks[number] }) => (
   <div className="space-y-6">
     <Card className="overflow-hidden">
-      <div className="aspect-[3/1] flex items-center justify-center relative" style={{ background: unit.gradient }}>
+      <div className="aspect-[3/1] flex items-center justify-center relative" style={{ background: track.gradient }}>
         <div className="absolute inset-0 bg-black/10" />
         <div className="relative text-center text-white">
-          <span className="text-4xl">{unit.icon}</span>
-          <h2 className="text-xl sm:text-2xl font-bold mt-2">Unit {unit.num}: {unit.title}</h2>
-          <p className="text-sm opacity-80 mt-1">{unit.subtitle}</p>
+          <span className="text-4xl">{track.icon}</span>
+          <h2 className="text-xl sm:text-2xl font-bold mt-2">{track.title}</h2>
+          <p className="text-sm opacity-80 mt-1">{track.subtitle}</p>
         </div>
       </div>
       <CardContent className="pt-6 space-y-4">
-        <p className="text-sm leading-relaxed">{unit.description}</p>
+        <p className="text-sm leading-relaxed">{track.description}</p>
         <div>
           <span className="text-xs text-muted-foreground uppercase tracking-wider">Key Concepts</span>
           <div className="flex flex-wrap gap-2 mt-2">
-            {unit.keyConcepts.map((k) => (
+            {track.keyConcepts.map((k) => (
               <span key={k} className="text-xs bg-muted px-2.5 py-1 rounded-full">{k}</span>
             ))}
           </div>
         </div>
         <div className="border-t border-border pt-4">
-          <p className="text-sm text-muted-foreground leading-relaxed">{unit.detail}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{track.detail}</p>
         </div>
       </CardContent>
     </Card>
   </div>
 );
 
-const Syllabus = () => (
+const Tracks = () => (
   <div className="space-y-4">
-    {units.map((u) => (
-      <Card key={u.num} className="overflow-hidden">
+    <p className="text-sm text-muted-foreground">Choose one track for the semester. You'll work exclusively in that discipline.</p>
+    {tracks.map((t) => (
+      <Card key={t.id} className="overflow-hidden">
         <div className="flex">
-          <div className="w-2 shrink-0" style={{ background: u.gradient }} />
+          <div className="w-2 shrink-0" style={{ background: t.gradient }} />
           <div className="flex-1 p-4">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-lg">{u.icon}</span>
+              <span className="text-lg">{t.icon}</span>
               <div>
-                <CardTitle className="text-sm">Unit {u.num}: {u.title}</CardTitle>
-                <CardDescription>{u.subtitle}</CardDescription>
+                <CardTitle className="text-sm">{t.title}</CardTitle>
+                <CardDescription>{t.subtitle}</CardDescription>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">{u.description}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">{t.description}</p>
             <div className="flex flex-wrap gap-1.5 mt-2">
-              {u.keyConcepts.map((k) => (
+              {t.keyConcepts.map((k) => (
                 <span key={k} className="text-[10px] bg-muted px-2 py-0.5 rounded-full">{k}</span>
               ))}
             </div>
@@ -304,17 +303,21 @@ const Syllabus = () => (
 
 const Gallery = () => (
   <div className="space-y-6">
-    <p className="text-sm text-muted-foreground">Student work and examples from each unit. Click any piece for details.</p>
-    <ArtGrid
-      items={[
-        { title: "Raga Study — Bhairav", gradient: "linear-gradient(135deg, #b8860b, #d4a574)", date: "Week 3", location: "Studio", motivation: "Exploring the morning raga through visual rhythm — translating melodic phrases into repeated brush strokes.", medium: "Watercolor on handmade paper" },
-        { title: "Self-Portrait", gradient: "linear-gradient(135deg, #2d5a27, #6b8f3c)", date: "Week 5", location: "Studio", motivation: "First attempt at portraiture — learning to see shapes rather than features.", medium: "Charcoal on newsprint" },
-        { title: "Bharatanatyam Mudra Study", gradient: "linear-gradient(135deg, #8e44ad, #c39bd3)", date: "Week 7", location: "Dance studio", motivation: "Capturing hand gestures from classical dance — the intersection of movement and still image.", medium: "Ink wash drawing" },
-        { title: "Clay Vessel", gradient: "linear-gradient(135deg, #2c3e50, #4ca1af)", date: "Week 9", location: "Sculpture lab", motivation: "Pinch pot technique — feeling the clay respond to pressure and moisture.", medium: "Terracotta clay" },
-        { title: "Consumerism Collage", gradient: "linear-gradient(135deg, #d35400, #e67e22)", date: "Week 11", location: "Studio", motivation: "Commentary on beauty standards using magazine cutouts and acrylic paint.", medium: "Mixed media collage" },
-        { title: "Rhythm Composition", gradient: "linear-gradient(135deg, #c0392b, #e74c3c)", date: "Week 4", location: "Studio", motivation: "Translating tala cycles into geometric patterns — 16-beat Teen Taal as visual grid.", medium: " gouache on card" },
-      ]}
-    />
+    <p className="text-sm text-muted-foreground">Student work from each track. Click any piece for details.</p>
+    {tracks.map((t) => (
+      <div key={t.id} className="space-y-3">
+        <div className="flex items-center gap-2">
+          <span>{t.icon}</span>
+          <h3 className="text-sm font-medium">{t.title}</h3>
+        </div>
+        <ArtGrid
+          items={[
+            { title: `${t.title} — Study I`, gradient: t.gradient, date: "Week 3", location: "Studio", motivation: `Exploring the fundamentals of ${t.subtitle.toLowerCase()} through guided exercises.`, medium: "Mixed media" },
+            { title: `${t.title} — Study II`, gradient: t.gradient.replace("135deg", "225deg"), date: "Week 7", location: "Studio", motivation: `Developing personal expression within ${t.subtitle.toLowerCase()} — moving beyond technique to intent.`, medium: "Studio work" },
+          ]}
+        />
+      </div>
+    ))}
   </div>
 );
 
@@ -351,12 +354,12 @@ const Resources = () => (
 /* ── app ──────────────────────────────────────────────────── */
 const tabs = [
   { id: "overview", label: "Overview", content: <Overview /> },
-  { id: "syllabus", label: "Syllabus", content: <Syllabus /> },
-  { id: "unit1", label: "Music", content: <UnitDetail unit={units[0]} /> },
-  { id: "unit2", label: "Painting", content: <UnitDetail unit={units[1]} /> },
-  { id: "unit3", label: "Dance", content: <UnitDetail unit={units[2]} /> },
-  { id: "unit4", label: "Sculpture", content: <UnitDetail unit={units[3]} /> },
-  { id: "unit5", label: "Collage", content: <UnitDetail unit={units[4]} /> },
+  { id: "tracks", label: "Tracks", content: <Tracks /> },
+  { id: "music", label: "Music", content: <TrackDetail track={tracks[0]} /> },
+  { id: "painting", label: "Painting", content: <TrackDetail track={tracks[1]} /> },
+  { id: "dance", label: "Dance", content: <TrackDetail track={tracks[2]} /> },
+  { id: "sculpture", label: "Sculpture", content: <TrackDetail track={tracks[3]} /> },
+  { id: "collage", label: "Collage", content: <TrackDetail track={tracks[4]} /> },
   { id: "gallery", label: "Gallery", content: <Gallery /> },
   { id: "resources", label: "Resources", content: <Resources /> },
 ];
@@ -372,8 +375,8 @@ export function App() {
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-transparent to-purple-900/10" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex items-end justify-between">
           <div>
-            <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">IIIT Hyderabad · OC2.101 · Monsoon 2026</p>
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Arts-1</h1>
+            <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">IIIT Hyderabad</p>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Arts Course</h1>
             <p className="text-sm sm:text-base text-muted-foreground mt-1">Imagination · Aesthetic Sensibility · Art as Knowledge</p>
           </div>
           <DarkToggle />
@@ -388,7 +391,7 @@ export function App() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
             <div className="space-y-2">
-              <h3 className="font-semibold text-sm">OC2.101 Arts-1</h3>
+              <h3 className="font-semibold text-sm">Arts Course</h3>
               <p className="text-xs text-muted-foreground">Faculty Coordinator: Saroja T K</p>
               <p className="text-xs text-muted-foreground">Indranil Chakrabarty · Saurabh Todariya</p>
             </div>
@@ -399,7 +402,7 @@ export function App() {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground pt-4 border-t border-border">
-            <p>© 2026 IIIT Hyderabad. Arts-1 Course Page.</p>
+            <p>© 2026 IIIT Hyderabad. Arts Course.</p>
             <div className="flex gap-4">
               <a href="https://iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank">IIIT-H</a>
               <a href="https://intranet.iiit.ac.in" className="hover:text-foreground transition-colors" target="_blank">Intranet</a>
