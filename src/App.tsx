@@ -38,6 +38,7 @@ interface Unit {
   icon: string;
   gradient: string;
   description: string;
+  verbatim: string;
   keyConcepts: string[];
   detail: string;
   works: ArtItem[];
@@ -59,6 +60,7 @@ const units: Unit[] = [
     icon: "fi fi-rr-music",
     gradient: "linear-gradient(135deg, #b8860b, #d4a574)",
     description: "Learn how sound and timing work in music. You'll practice songs, tunes, and beats, with a focus on Indian music.",
+    verbatim: "This course emphasizes understanding the nuances of sound and timing, the basic concepts of any system of music in the world. The students are made to learn different songs, melodic exercises, and rhythmic exercises with a focus on concepts of Indian music and are exposed to the logical elements of the art form in general. The unique concepts of Indian music, raga and tala are introduced to them to make them realize the depth of this system of music and its connections to various branches of study. The introduction of these elements through personal demonstrations, presentation of audio, and videos of acclaimed artists, intends to attract their attention towards the artistic sensibilities, creativity, and discipline in life.",
     keyConcepts: ["Raga", "Tala", "Tune practice", "Rhythm practice"],
     detail: "You'll learn about raga (tune patterns) and tala (time cycles) and how they link to other subjects. Through live demos, recordings, and videos of great artists, you'll build creativity and focus.",
     works: [
@@ -75,6 +77,7 @@ const units: Unit[] = [
     icon: "fi fi-rr-palette",
     gradient: "linear-gradient(135deg, #2d5a27, #6b8f3c)",
     description: "Use lines and colors to share ideas and feelings. You'll learn basic drawing and painting by telling stories, making logos, symbols, and portraits.",
+    verbatim: "The course's primary focus is to help students express their ideas and feelings through lines and colors. For this basic drawing and painting skills will be taught to the students in the class. The students will also be given different tasks like oral and visual storytelling, creating logos, symbols, and portraiture. Through these tasks, the student will understand different ways of visual thinking.",
     keyConcepts: ["Drawing", "Color", "Storytelling", "Portraits", "Visual thinking"],
     detail: "You'll try different ways of seeing and thinking with your hands. The goal is not perfect technique, but learning to show your ideas clearly.",
     works: [
@@ -91,6 +94,7 @@ const units: Unit[] = [
     icon: "fi fi-rr-ballet-dance",
     gradient: "linear-gradient(135deg, #8e44ad, #c39bd3)",
     description: "Learn why dance matters and how to train your body for it. You'll practice simple stretches and basic steps from Indian dance forms.",
+    verbatim: "The course informs the students about the significance of dance, and the training involved to perform the dance movements. The course instructs about basic stretches and fundamental movements of the dance of various Indian dance forms. The knowledge about various dance forms of India and the significance of the dance forms in the past and present is discussed. The course helps the students to compose movements and dance their individual units of movements they create out of the instructions and assistance received. In the course, the emphasis point on evaluation is not based on the dancing skills of the students but on their participation in the session in progress.",
     keyConcepts: ["Indian dance", "Stretches", "Making phrases", "Culture"],
     detail: "You'll learn about different Indian dance forms and why they matter. You'll make your own short steps and phrases. You are graded on taking part, not on skill.",
     works: [
@@ -107,6 +111,7 @@ const units: Unit[] = [
     icon: "fi fi-rr-sculpture",
     gradient: "linear-gradient(135deg, #2c3e50, #4ca1af)",
     description: "Learn about 3D shape by making things with clay. Use your hands to express ideas and feel the material.",
+    verbatim: "The course deals with understanding three-dimensional form and creativity. Clay modelling is a great activity that helps students develop in many ways, like self-expression and creativity. In this course, students are taught to make sculptures out of clay. Through this, I try to connect them to nature. The students get a personal experience of the texture of clay, which is an important part of understanding nature. In this course, they will learn how to use different materials to make art.",
     keyConcepts: ["Clay", "3D form", "Natural materials", "Texture"],
     detail: "You'll get to know clay by touch — a simple way to connect with natural material. You'll try different tools to make forms and find your own style.",
     works: [
@@ -123,6 +128,7 @@ const units: Unit[] = [
     icon: "fi fi-rr-layers",
     gradient: "linear-gradient(135deg, #d35400, #e67e22)",
     description: "Make new images by cutting and joining bits from magazines, papers, photos, and maps. You can also draw or paint on them.",
+    verbatim: "Collage is not just a compilation of photos that we create to share on social media. It's an art form where one assembles images from a magazine or newspapers or photographic images, maps, diagrams by cutting pasting or painting or drawing over it to create a unique composition. Artists have manipulated mass produced images to comment on or question body images and narrow beauty standards, gender stereotypes, consumerism, racism and much more. The aim of this course is to equip students with visual tools to explore the possibility this medium offers through a set of exercises. Students will learn to express their ideas or imagination through the process of selection and deduction and addition.",
     keyConcepts: ["Cut and paste", "Visual notes", "Choosing and arranging", "Social topics"],
     detail: "Artists use cut photos to talk about beauty, gender, buying habits, and fairness. You'll learn to pick, remove, and add images to say what you mean.",
     works: [
@@ -134,11 +140,11 @@ const units: Unit[] = [
 ];
 
 const courseOutcomes = [
-  { code: "CO-1", text: "Understand art better and see why it matters" },
-  { code: "CO-2", text: "Grow your imagination and eye for beauty" },
-  { code: "CO-3", text: "Build skills in people and culture through art" },
-  { code: "CO-4", text: "See art as a way to learn and know" },
-  { code: "CO-5", text: "Learn how careful, informed practice helps you do better" },
+  { code: "CO-1", verbatim: "Understands and appreciate art in a deeper sense, and realize the importance of Art", plain: "Understand art better and see why it matters" },
+  { code: "CO-2", verbatim: "Enhances Imagination and aesthetic sensibility", plain: "Grow your imagination and eye for beauty" },
+  { code: "CO-3", verbatim: "Imparts humanities and artistic skills", plain: "Build skills in people and culture through art" },
+  { code: "CO-4", verbatim: "Understands Art as a system of knowledge", plain: "See art as a way to learn and know" },
+  { code: "CO-5", verbatim: "Understands the effectiveness of informed Art practice", plain: "Learn how careful, informed practice helps you do better" },
 ];
 
 /* ── dark mode ────────────────────────────────────────────── */
@@ -491,6 +497,20 @@ const Overview = () => (
       </CardContent>
     </Card>
 
+    <Card>
+      <CardHeader><CardTitle className="text-base font-display">How we teach</CardTitle><CardDescription>Official text + plain English</CardDescription></CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <span className="text-xs text-muted-foreground uppercase tracking-wider">Official syllabus</span>
+          <p className="text-sm leading-relaxed mt-2">The course is on Imagination, aesthetic sensibility, goodness in life and improving humanities skill. This is achieved by offering training on artistic skills and Art Education. The course does not focus on creating artists out of the students which would be intense, but the course is designed on the thought that the end form is secondary, while the means to achieve is primary. The course introduces the students to the thought and the process of Art creation and Art appreciation. The course explains the confluence of art and other popular knowledge systems.</p>
+        </div>
+        <div className="bg-muted/40 rounded-xl p-4 border">
+          <span className="text-xs text-muted-foreground uppercase tracking-wider">In plain English</span>
+          <p className="text-sm leading-relaxed mt-2">You'll learn by doing — trying art skills, not just listening. Making matters more than the final piece. You'll see how making and looking at art links to other ways of thinking.</p>
+        </div>
+      </CardContent>
+    </Card>
+
     <div id="ateliers" className="scroll-mt-24">
       <UnitsPortal />
     </div>
@@ -498,11 +518,14 @@ const Overview = () => (
     <Card>
       <CardHeader><CardTitle className="text-base font-display">What you'll learn</CardTitle><CardDescription>Skills you'll build</CardDescription></CardHeader>
       <CardContent>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {courseOutcomes.map((co) => (
             <div key={co.code} className="flex gap-3 items-start">
-              <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-0.5 rounded shrink-0 mt-0.5">{co.code}</span>
-              <p className="text-sm text-muted-foreground">{co.text}</p>
+              <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-0.5 rounded shrink-0 mt-1">{co.code}</span>
+              <div className="space-y-1.5 flex-1">
+                <p className="text-sm leading-relaxed">{co.verbatim}</p>
+                <p className="text-xs text-muted-foreground bg-muted/40 rounded-lg px-2.5 py-1.5 border">In plain English: {co.plain}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -511,8 +534,15 @@ const Overview = () => (
 
     <Card>
       <CardHeader><CardTitle className="text-base font-display">How you're graded</CardTitle></CardHeader>
-      <CardContent className="text-sm text-muted-foreground">
-        <p>This is a 2-credit course. You're graded on <strong className="text-foreground">taking part in class</strong>, not on being the best artist.</p>
+      <CardContent className="space-y-4 text-sm text-muted-foreground">
+        <div>
+          <span className="text-xs text-muted-foreground uppercase tracking-wider">Official syllabus</span>
+          <p className="leading-relaxed mt-2">It is a 2-credit course. The semester evaluations are based on the participation of students in the sessions.</p>
+        </div>
+        <div className="bg-muted/40 rounded-xl p-4 border">
+          <span className="text-xs text-muted-foreground uppercase tracking-wider">In plain English</span>
+          <p className="leading-relaxed mt-2">You're graded on <strong className="text-foreground">taking part in class</strong>, not on being the best artist.</p>
+        </div>
       </CardContent>
     </Card>
   </div>
@@ -605,7 +635,14 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
 
       <Card>
         <CardContent className="pt-6 space-y-5">
-          <p className="text-sm leading-relaxed">{unit.description}</p>
+          <div>
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">From the official syllabus</span>
+            <p className="text-sm leading-relaxed mt-2">{unit.verbatim}</p>
+          </div>
+          <div className="bg-muted/40 rounded-xl p-4 border">
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">In plain English</span>
+            <p className="text-sm leading-relaxed mt-2">{unit.description} {unit.detail}</p>
+          </div>
           <div>
             <span className="text-xs text-muted-foreground uppercase tracking-wider">Main ideas</span>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -613,9 +650,6 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
                 <span key={k} className="text-xs bg-muted px-2.5 py-1 rounded-full">{k}</span>
               ))}
             </div>
-          </div>
-          <div className="border-t border-border pt-4">
-            <p className="text-sm text-muted-foreground leading-relaxed">{unit.detail}</p>
           </div>
         </CardContent>
       </Card>
