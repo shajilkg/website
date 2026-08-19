@@ -1,7 +1,27 @@
 import { useState, useEffect, useCallback, createContext, useContext } from "react";
-import { Tabs } from "./components/Tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./components/ui/card";
 import "./index.css";
+
+/* ── tiny hash router ─────────────────────────────────────── */
+function useHashRoute() {
+  const read = () => {
+    const hash = window.location.hash.replace(/^#\/?/, "");
+    return hash.split("/").filter(Boolean);
+  };
+  const [parts, setParts] = useState<string[]>(read);
+  useEffect(() => {
+    const onChange = () => setParts(read());
+    window.addEventListener("hashchange", onChange);
+    return () => window.removeEventListener("hashchange", onChange);
+  }, []);
+  return parts;
+}
+
+function useScrollTop(parts: string[]) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [parts.join("/")]);
+}
 
 const meta = {
   code: "OC2.101 Arts 1 (H1)",
@@ -396,6 +416,16 @@ const UnitDetail = ({ unit }: { unit: Unit }) => (
         </div>
       </CardContent>
     </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base font-display">{unit.title} — Gallery</CardTitle>
+        <CardDescription>Works from this unit · click any piece for details</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ArtGrid items={unit.works} />
+      </CardContent>
+    </Card>
   </div>
 );
 
@@ -445,18 +475,26 @@ const Resources = () => (
   </div>
 );
 
-/* ── tabs ─────────────────────────────────────────────────── */
-const tabs = [
-  { id: "overview", label: "Overview", content: <Overview /> },
-  { id: "units", label: "Units", content: <Units /> },
-  ...units.map((u) => ({ id: u.id, label: u.title, content: <UnitDetail unit={u} /> })),
-  { id: "gallery", label: "Gallery", content: <Gallery /> },
-  { id: "resources", label: "Resources", content: <Resources /> },
+/* ── routes ───────────────────────────────────────────────── */
+const routes = [
+  { id: "overview", label: "Overview", page: <Overview /> },
+  { id: "units", label: "Units", page: <Units /> },
+  ...units.map((u) => ({ id: u.id, label: u.title, page: <UnitDetail unit={u} /> })),
+  { id: "gallery", label: "Gallery", page: <Gallery /> },
+  { id: "resources", label: "Resources", page: <Resources /> },
 ];
+
+function resolve(parts: string[]) {
+  const id = parts[0] ?? "overview";
+  return routes.find((r) => r.id === id) ?? routes[0]!;
+}
 
 /* ── app ──────────────────────────────────────────────────── */
 export function App() {
   const { dark, toggle } = useDarkMode();
+  const parts = useHashRoute();
+  const active = resolve(parts);
+  useScrollTop(parts);
 
   return (
     <DarkModeCtx.Provider value={{ dark, toggle }}>
@@ -466,7 +504,9 @@ export function App() {
           <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex items-start justify-between gap-4">
             <div>
               <p className="text-xs tracking-widest uppercase text-muted-foreground mb-2">{meta.institute}</p>
-              <h1 className="text-3xl sm:text-4xl font-display font-semibold tracking-tight">{meta.code}</h1>
+              <h1 className="text-3xl sm:text-4xl font-display font-semibold tracking-tight">
+                <a href="#/" className="hover:opacity-80 transition-opacity">{meta.code}</a>
+              </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">{meta.subtitle}</p>
               <div className="flex flex-wrap gap-2 mt-3">
                 <span className="text-[10px] font-mono bg-primary/10 text-primary px-2 py-0.5 rounded-full">{meta.credits}</span>
@@ -485,8 +525,12 @@ export function App() {
           </div>
         </header>
 
+        <Nav activeId={active.id} />
+
         <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          <Tabs tabs={tabs} />
+          <div key={active.id} className="animate-[slide-up_0.35s_ease-out]">
+            {active.page}
+          </div>
         </main>
 
         <footer className="border-t border-border mt-12">
@@ -520,6 +564,33 @@ export function App() {
 }
 
 export default App;
+
+/* ── nav ──────────────────────────────────────────────────── */
+function Nav({ activeId }: { activeId: string }) {
+  return (
+    <div className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur-[12px] supports-[backdrop-filter]:bg-background/70">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 flex gap-1.5 overflow-x-auto scrollbar-none sm:flex-wrap">
+        {routes.map((r) => {
+          const isActive = activeId === r.id;
+          return (
+            <a
+              key={r.id}
+              href={`#/${r.id}`}
+              aria-current={isActive ? "page" : undefined}
+              className={`px-3.5 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap shrink-0 transition-all duration-200 ${
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              }`}
+            >
+              {r.label}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 /* ── dark toggle ──────────────────────────────────────────── */
 function DarkToggle() {
