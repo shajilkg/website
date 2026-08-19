@@ -562,7 +562,6 @@ const UnitsPortal = () => (
               <div className="absolute inset-0 opacity-20 mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
               <div className="absolute inset-0 halftone text-white" />
               <i className={`${u.icon} relative text-4xl text-white drop-shadow-sm transition-transform duration-300 group-hover:scale-110`}></i>
-              <span className="absolute bottom-3 left-3 text-[10px] font-mono bg-black/25 text-white backdrop-blur px-2 py-1 rounded-full border border-white/15">{u.unit}</span>
               <span className="washi absolute -top-1 right-6 h-4 w-14 rotate-2 hidden sm:flex" aria-hidden />
             </div>
           </a>
@@ -612,7 +611,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
           )}
           {unit.id === "painting" && <div className="absolute inset-0 halftone text-white opacity-20 pointer-events-none" />}
           {unit.id === "collage" && <span className="washi absolute top-3 left-1/2 -translate-x-1/2 h-6 w-28 rotate-1 pointer-events-none" aria-hidden />}
-          <span className="relative text-[11px] font-mono tracking-[0.18em] uppercase bg-white/15 backdrop-blur border border-white/15 px-3 py-1.5 rounded-full">{unit.unit} · {unit.subtitle}</span>
+          <span className="relative text-[11px] font-mono tracking-[0.18em] uppercase bg-white/15 backdrop-blur border border-white/15 px-3 py-1.5 rounded-full">{unit.subtitle}</span>
           <i className={`${unit.icon} relative text-5xl sm:text-6xl mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.25)]`}></i>
           <h1 className="relative text-3xl sm:text-[2.05rem] font-display font-semibold tracking-tight mt-3 text-balance">{unit.title}</h1>
           <p className="relative text-sm opacity-[0.9] mt-2 max-w-[52ch] leading-relaxed text-pretty">{unit.description}</p>
@@ -752,7 +751,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
                 <span className="size-9 rounded-xl flex items-center justify-center text-white text-base shrink-0 shadow-sm" style={{ background: u.gradient }}><i className={u.icon}></i></span>
                 <span className="flex-1 min-w-0">
                   <span className="text-sm font-medium leading-none block truncate">{u.title}</span>
-                  <span className="text-[11px] text-muted-foreground truncate block">{u.subtitle} · {u.unit}</span>
+                  <span className="text-[11px] text-muted-foreground truncate block">{u.subtitle}</span>
                 </span>
                 <span className={`size-6 rounded-full flex items-center justify-center text-[11px] shrink-0 transition ${active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"}`}>→</span>
               </a>
