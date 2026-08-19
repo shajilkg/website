@@ -682,7 +682,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
         <a href="#/overview" onClick={onNavigate} className="flex items-center gap-3 group">
           <span className="size-9 rounded-xl flex items-center justify-center text-white text-sm shadow-sm" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }}><i className="fi fi-rr-diamond"></i></span>
           <div>
-            <p className="font-display font-semibold text-[15px] leading-none tracking-tight group-hover:text-primary transition-colors">Mitti Studio</p>
+            <p className="font-display font-semibold text-[15px] leading-none tracking-tight group-hover:text-primary transition-colors">Arts</p>
             <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">OC2.101 · IIIT-H</p>
           </div>
         </a>
@@ -776,7 +776,7 @@ export function App() {
                 </span>
               </button>
               <nav className="hidden sm:flex items-center gap-2 text-sm min-w-0">
-                <a href="#/overview" className="text-muted-foreground hover:text-foreground transition">Mitti Studio</a>
+                <a href="#/overview" className="text-muted-foreground hover:text-foreground transition">Arts</a>
                 <span className="text-muted-foreground/40">/</span>
                 {unit ? (
                   <>
