@@ -22,7 +22,7 @@ function useScrollTop(dep: string) {
 const meta = {
   code: "OC2.101 Arts 1 (H1)",
   institute: "IIIT Hyderabad",
-  subtitle: "Imagination · Aesthetic Sensibility · Art as Knowledge",
+  subtitle: "Imagination · Art · Knowledge",
   coordinator: "Saroja T K",
   credits: "2-0-0-2",
   syllabus: "https://intranet.iiit.ac.in/offices/static/files/Courses-Syllabus_M26-V3.pdf.pdf",
@@ -58,97 +58,87 @@ const units: Unit[] = [
     subtitle: "Music",
     icon: "fi fi-rr-music",
     gradient: "linear-gradient(135deg, #b8860b, #d4a574)",
-    description:
-      "Understanding the nuances of sound and timing — the basic concepts of any system of music in the world. Students learn songs, melodic exercises, and rhythmic exercises with a focus on Indian music concepts.",
-    keyConcepts: ["Raga", "Tala", "Melodic exercises", "Rhythmic patterns"],
-    detail:
-      "The unique concepts of Indian music — raga and tala — are introduced to realise the depth of this system and its connections to various branches of study. Through demonstrations, audio, and videos of acclaimed artists, students develop artistic sensibilities, creativity, and discipline.",
+    description: "Learn how sound and timing work in music. You'll practice songs, tunes, and beats, with a focus on Indian music.",
+    keyConcepts: ["Raga", "Tala", "Tune practice", "Rhythm practice"],
+    detail: "You'll learn about raga (tune patterns) and tala (time cycles) and how they link to other subjects. Through live demos, recordings, and videos of great artists, you'll build creativity and focus.",
     works: [
-      { title: "Raag Yaman — alaap", medium: "Vocal", when: "2024", where: "Studio", note: "Opening alaap exploring the vadi-samvadi of Yaman." },
-      { title: "Tala practice", medium: "Rhythm", when: "2024", where: "Studio", note: "Counting and clapping cycles of jhaptal and rupak." },
-      { title: "Student composition", medium: "Composition", when: "2023", where: "Studio", note: "A short original melody set to a chosen tala." },
+      { title: "Raag Yaman — alaap", medium: "Vocal", when: "2024", where: "Studio", note: "Opening tune exploring the main notes of Yaman." },
+      { title: "Tala practice", medium: "Rhythm", when: "2024", where: "Studio", note: "Counting and clapping common time cycles." },
+      { title: "Student composition", medium: "Composition", when: "2023", where: "Studio", note: "A short original tune set to a chosen beat." },
     ],
   },
   {
     id: "painting",
     unit: "Unit 2",
     title: "Painting",
-    subtitle: "Drawing & Colour",
+    subtitle: "Drawing and Color",
     icon: "fi fi-rr-palette",
     gradient: "linear-gradient(135deg, #2d5a27, #6b8f3c)",
-    description:
-      "Expressing ideas and feelings through lines and colours. Basic drawing and painting skills are taught in class, with tasks including storytelling, creating logos, symbols, and portraiture.",
-    keyConcepts: ["Drawing", "Colour theory", "Storytelling", "Portraiture", "Visual thinking"],
-    detail:
-      "Students understand different ways of visual thinking through hands-on tasks. The focus is not on technical perfection but on developing the ability to communicate visually and express personal perspectives.",
+    description: "Use lines and colors to share ideas and feelings. You'll learn basic drawing and painting by telling stories, making logos, symbols, and portraits.",
+    keyConcepts: ["Drawing", "Color", "Storytelling", "Portraits", "Visual thinking"],
+    detail: "You'll try different ways of seeing and thinking with your hands. The goal is not perfect technique, but learning to show your ideas clearly.",
     works: [
-      { title: "Visual story — street", medium: "Mixed media", when: "2024", where: "Studio", note: "A narrative built from observations of street life." },
-      { title: "Logo — club", medium: "Ink", when: "2024", where: "Studio", note: "Symbol design for a campus club identity." },
-      { title: "Portrait — charcoal", medium: "Charcoal", when: "2023", where: "Studio", note: "Tonality study from a live model." },
+      { title: "Visual story — street", medium: "Mixed media", when: "2024", where: "Studio", note: "A story built from watching street life." },
+      { title: "Logo — club", medium: "Ink", when: "2024", where: "Studio", note: "Simple symbol for a campus club." },
+      { title: "Portrait — charcoal", medium: "Charcoal", when: "2023", where: "Studio", note: "Shading study from a live model." },
     ],
   },
   {
     id: "dance",
     unit: "Unit 3",
     title: "Dance",
-    subtitle: "Movement & Expression",
+    subtitle: "Movement",
     icon: "fi fi-rr-ballet-dance",
     gradient: "linear-gradient(135deg, #8e44ad, #c39bd3)",
-    description:
-      "The significance of dance and the training involved in performing dance movements — basic stretches and fundamental movements of various Indian dance forms.",
-    keyConcepts: ["Indian dance forms", "Basic stretches", "Movement composition", "Cultural significance"],
-    detail:
-      "Students learn about various dance forms of India and their significance in the past and present. They compose movements and create their individual units of movement. Evaluation is based on participation, not dancing skill.",
+    description: "Learn why dance matters and how to train your body for it. You'll practice simple stretches and basic steps from Indian dance forms.",
+    keyConcepts: ["Indian dance", "Stretches", "Making phrases", "Culture"],
+    detail: "You'll learn about different Indian dance forms and why they matter. You'll make your own short steps and phrases. You are graded on taking part, not on skill.",
     works: [
-      { title: "Adavu — aramandi", medium: "Bharatanatyam", when: "2024", where: "Studio", note: "Foundation footwork and posture of the first adavu." },
-      { title: "60s phrase", medium: "Composition", when: "2024", where: "Studio", note: "A 60-second movement phrase built from taught units." },
-      { title: "Folk note", medium: "Study", when: "2023", where: "Studio", note: "Notes and gestures drawn from a regional folk form." },
+      { title: "Adavu — aramandi", medium: "Bharatanatyam", when: "2024", where: "Studio", note: "Basic footwork and stance." },
+      { title: "60s phrase", medium: "Composition", when: "2024", where: "Studio", note: "A 60-second phrase built from taught steps." },
+      { title: "Folk note", medium: "Study", when: "2023", where: "Studio", note: "Steps drawn from a local folk dance." },
     ],
   },
   {
     id: "sculpture",
     unit: "Unit 4",
     title: "Sculpture",
-    subtitle: "3D Form & Clay",
+    subtitle: "Clay and Form",
     icon: "fi fi-rr-sculpture",
     gradient: "linear-gradient(135deg, #2c3e50, #4ca1af)",
-    description:
-      "Understanding three-dimensional form and creativity. Clay modelling for self-expression and connecting to nature through the texture of clay.",
-    keyConcepts: ["Clay modelling", "3D form", "Natural materials", "Texture"],
-    detail:
-      "Students get a personal experience of the texture of clay — an important part of understanding nature. They learn how to use different materials to make art, developing self-expression and creativity through hands-on sculptural work.",
+    description: "Learn about 3D shape by making things with clay. Use your hands to express ideas and feel the material.",
+    keyConcepts: ["Clay", "3D form", "Natural materials", "Texture"],
+    detail: "You'll get to know clay by touch — a simple way to connect with natural material. You'll try different tools to make forms and find your own style.",
     works: [
-      { title: "Pinch pot", medium: "Clay", when: "2024", where: "Studio", note: "First encounter with form from a single ball of clay." },
-      { title: "Coil vessel", medium: "Clay", when: "2024", where: "Studio", note: "Building height and rhythm with coiled walls." },
-      { title: "Texture — leaves", medium: "Relief", when: "2023", where: "Studio", note: "Pressing natural textures into a clay slab." },
+      { title: "Pinch pot", medium: "Clay", when: "2024", where: "Studio", note: "First form made from one ball of clay." },
+      { title: "Coil vessel", medium: "Clay", when: "2024", where: "Studio", note: "Building height with rolled coils." },
+      { title: "Texture — leaves", medium: "Relief", when: "2023", where: "Studio", note: "Pressing leaf patterns into clay." },
     ],
   },
   {
     id: "collage",
     unit: "Unit 5",
     title: "Collage",
-    subtitle: "Mixed Media & Commentary",
+    subtitle: "Cut and Paste",
     icon: "fi fi-rr-layers",
     gradient: "linear-gradient(135deg, #d35400, #e67e22)",
-    description:
-      "Assembling images from magazines, newspapers, photographs, maps, and diagrams by cutting, pasting, painting, or drawing to create unique compositions.",
-    keyConcepts: ["Mixed media", "Visual commentary", "Selection & composition", "Social themes"],
-    detail:
-      "Artists have manipulated mass-produced images to comment on body images, beauty standards, gender stereotypes, consumerism, and racism. Students learn to express ideas through selection, deduction, and addition — equipping them with visual tools to explore this medium.",
+    description: "Make new images by cutting and joining bits from magazines, papers, photos, and maps. You can also draw or paint on them.",
+    keyConcepts: ["Cut and paste", "Visual notes", "Choosing and arranging", "Social topics"],
+    detail: "Artists use cut photos to talk about beauty, gender, buying habits, and fairness. You'll learn to pick, remove, and add images to say what you mean.",
     works: [
-      { title: "Consumer — cut & paste", medium: "Collage", when: "2024", where: "Studio", note: "Deconstructing advertisements into a new statement." },
-      { title: "Gender — maps", medium: "Collage", when: "2024", where: "Studio", note: "Re-mapping place through gendered imagery." },
-      { title: "City — newspaper", medium: "Collage", when: "2023", where: "Studio", note: "Building an urban texture from newsprint." },
+      { title: "Consumer — cut & paste", medium: "Collage", when: "2024", where: "Studio", note: "Turning ads into a new message." },
+      { title: "Gender — maps", medium: "Collage", when: "2024", where: "Studio", note: "Using maps to talk about gender and place." },
+      { title: "City — newspaper", medium: "Collage", when: "2023", where: "Studio", note: "Building a city texture from newspaper." },
     ],
   },
 ];
 
 const courseOutcomes = [
-  { code: "CO-1", text: "Understand and appreciate art in a deeper sense, and realise the importance of art" },
-  { code: "CO-2", text: "Enhance imagination and aesthetic sensibility" },
-  { code: "CO-3", text: "Impart humanities and artistic skills" },
-  { code: "CO-4", text: "Understand art as a system of knowledge" },
-  { code: "CO-5", text: "Understand the effectiveness of informed art practice" },
+  { code: "CO-1", text: "Understand art better and see why it matters" },
+  { code: "CO-2", text: "Grow your imagination and eye for beauty" },
+  { code: "CO-3", text: "Build skills in people and culture through art" },
+  { code: "CO-4", text: "See art as a way to learn and know" },
+  { code: "CO-5", text: "Learn how careful, informed practice helps you do better" },
 ];
 
 /* ── dark mode ────────────────────────────────────────────── */
@@ -487,15 +477,15 @@ const Overview = () => (
         <div className="relative text-center text-white px-4">
           <p className="text-xs tracking-widest uppercase opacity-80">{meta.institute}</p>
           <h1 className="text-2xl sm:text-3xl font-display font-semibold mt-1">{meta.code}</h1>
-          <p className="text-sm opacity-80 mt-1">Institute Elective · {meta.credits} · Coordinator: {meta.coordinator}</p>
+          <p className="text-sm opacity-80 mt-1">College elective · {meta.credits} · Teacher: {meta.coordinator}</p>
         </div>
       </div>
       <CardContent className="pt-6 space-y-4">
         <p className="text-sm text-muted-foreground leading-relaxed">
-          The course is on imagination, aesthetic sensibility, goodness in life, and improving humanities skills. It does not focus on creating artists — the end form is secondary, while the means to achieve is primary. Students choose one art unit at the start of the semester and work exclusively in that discipline.
+          This course helps you use your imagination, notice beauty, and think about life. You don't need to become an artist. How you work matters more than the final piece. At the start you pick one studio — music, painting, dance, sculpture, or collage — and stay with it all semester.
         </p>
         <div className="flex flex-wrap gap-2">
-          <a href="#ateliers" onClick={(e) => { e.preventDefault(); document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="text-xs font-medium bg-primary text-primary-foreground px-3.5 py-2 rounded-full hover:bg-primary/90 transition">Explore ateliers →</a>
+          <a href="#ateliers" onClick={(e) => { e.preventDefault(); document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="text-xs font-medium bg-primary text-primary-foreground px-3.5 py-2 rounded-full hover:bg-primary/90 transition">Explore studios →</a>
           <a href={meta.syllabus} target="_blank" rel="noreferrer" className="text-xs font-medium border bg-background px-3.5 py-2 rounded-full hover:bg-muted transition">Syllabus ↗</a>
         </div>
       </CardContent>
@@ -506,7 +496,7 @@ const Overview = () => (
     </div>
 
     <Card>
-      <CardHeader><CardTitle className="text-base font-display">Course Outcomes</CardTitle><CardDescription>What the course is designed to develop</CardDescription></CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">What you'll learn</CardTitle><CardDescription>Skills you'll build</CardDescription></CardHeader>
       <CardContent>
         <div className="space-y-3">
           {courseOutcomes.map((co) => (
@@ -520,9 +510,9 @@ const Overview = () => (
     </Card>
 
     <Card>
-      <CardHeader><CardTitle className="text-base font-display">Assessment</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">How you're graded</CardTitle></CardHeader>
       <CardContent className="text-sm text-muted-foreground">
-        <p>2-credit course. Semester evaluations are based on the <strong className="text-foreground">participation of students in the sessions</strong>.</p>
+        <p>This is a 2-credit course. You're graded on <strong className="text-foreground">taking part in class</strong>, not on being the best artist.</p>
       </CardContent>
     </Card>
   </div>
@@ -531,8 +521,8 @@ const Overview = () => (
 const UnitsPortal = () => (
   <div className="space-y-6">
     <div>
-      <h2 className="text-xl font-display font-semibold tracking-tight">Ateliers</h2>
-      <p className="text-sm text-muted-foreground mt-1">Five ateliers · choose one for the semester.</p>
+      <h2 className="text-xl font-display font-semibold tracking-tight">Studios</h2>
+      <p className="text-sm text-muted-foreground mt-1">Five studios · pick one for the semester.</p>
     </div>
     <div className="grid sm:grid-cols-2 gap-5">
       {units.map((u) => (
@@ -559,7 +549,7 @@ const UnitsPortal = () => (
             </div>
             <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground">{u.works.length} works</span>
-              <a href={`#/${u.id}`} className="text-xs font-medium text-primary hover:underline">Open atelier →</a>
+              <a href={`#/${u.id}`} className="text-xs font-medium text-primary hover:underline">Open studio →</a>
             </div>
           </div>
         </Card>
@@ -574,7 +564,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
   const next = idx < allUnits.length - 1 ? allUnits[idx + 1] : null;
   return (
     <div className="space-y-6">
-      {/* atelier hero — bespoke per unit */}
+      {/* studio hero */}
       <div className="overflow-hidden rounded-2xl border shadow-sm">
         <div className="relative h-[320px] sm:h-[400px] flex flex-col items-center justify-center text-white p-6 sm:p-8 text-center overflow-hidden" style={{ background: unit.gradient }}>
           <div className="absolute inset-0 bg-black/[0.06]" />
@@ -598,11 +588,11 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
           <p className="relative text-sm opacity-[0.9] mt-2 max-w-[52ch] leading-relaxed text-pretty">{unit.description}</p>
           <div className="relative flex items-center gap-2 mt-5">
             <a href="#works" className="text-xs font-semibold bg-white text-zinc-900 px-4 py-2 rounded-full hover:bg-white/90 transition shadow-sm">View works ↓</a>
-            <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-xs font-medium bg-white/10 backdrop-blur border border-white/20 px-4 py-2 rounded-full hover:bg-white/15 transition">All ateliers</a>
+            <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-xs font-medium bg-white/10 backdrop-blur border border-white/20 px-4 py-2 rounded-full hover:bg-white/15 transition">All studios</a>
           </div>
         </div>
         <div className="bg-card px-5 sm:px-6 py-4 flex flex-wrap gap-5 text-xs border-t">
-          <div><span className="text-muted-foreground">Atelier</span><p className="font-medium mt-0.5 flex items-center gap-1.5"><span className="size-2 rounded-full" style={{ background: unit.gradient }} />{unit.subtitle}</p></div>
+          <div><span className="text-muted-foreground">Studio</span><p className="font-medium mt-0.5 flex items-center gap-1.5"><span className="size-2 rounded-full" style={{ background: unit.gradient }} />{unit.subtitle}</p></div>
           <div><span className="text-muted-foreground">Studio</span><p className="font-medium mt-0.5">{unit.works.length} works</p></div>
           <div><span className="text-muted-foreground">Focus</span><p className="font-medium mt-0.5">{unit.keyConcepts.slice(0, 2).join(" · ")}</p></div>
           <div className="ml-auto hidden sm:block"><span className="text-muted-foreground">Navigate</span><p className="font-medium mt-0.5 flex gap-1">{prev && <a href={`#/${prev.id}`} className="hover:text-primary transition">← {prev.title}</a>}{prev && next && <span className="text-muted-foreground">·</span>}{next && <a href={`#/${next.id}`} className="hover:text-primary transition">{next.title} →</a>}</p></div>
@@ -617,7 +607,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
         <CardContent className="pt-6 space-y-5">
           <p className="text-sm leading-relaxed">{unit.description}</p>
           <div>
-            <span className="text-xs text-muted-foreground uppercase tracking-wider">Key Concepts</span>
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">Main ideas</span>
             <div className="flex flex-wrap gap-2 mt-2">
               {unit.keyConcepts.map((k) => (
                 <span key={k} className="text-xs bg-muted px-2.5 py-1 rounded-full">{k}</span>
@@ -633,7 +623,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
       <Card id="works" className="scroll-mt-20">
         <CardHeader>
           <CardTitle className="text-base font-display flex items-center gap-2"><span className="size-2 rounded-full" style={{ background: unit.gradient }} />{unit.title} — Gallery</CardTitle>
-          <CardDescription>Works from this atelier · click any piece for details</CardDescription>
+          <CardDescription>Works from this studio · click to see details</CardDescription>
         </CardHeader>
         <CardContent>
           <ArtGrid items={unit.works} gradient={unit.gradient} />
@@ -646,7 +636,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
 const Resources = () => (
   <div className="space-y-4">
     <Card>
-      <CardHeader><CardTitle className="text-base font-display">Recommended Reading</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">Books to read</CardTitle></CardHeader>
       <CardContent className="text-sm text-muted-foreground space-y-2">
         <p>• <em>The Art of Indian Culture</em> — Brijendra Kumar</p>
         <p>• <em>Indian Music</em> — P. Sambamurthy</p>
@@ -654,16 +644,16 @@ const Resources = () => (
       </CardContent>
     </Card>
     <Card>
-      <CardHeader><CardTitle className="text-base font-display">Materials</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">What to bring</CardTitle></CardHeader>
       <CardContent className="text-sm text-muted-foreground space-y-2">
         <p>• Drawing notebook (A4), pencils (HB–6B), eraser, sharpener</p>
-        <p>• Watercolour set, brushes (round + flat), mixing palette</p>
-        <p>• Air-dry clay (provided in studio), modelling tools</p>
-        <p>• Old magazines/newspapers for collage work</p>
+        <p>• Watercolor set, brushes (round + flat), mixing palette</p>
+        <p>• Air-dry clay (given in studio), modeling tools</p>
+        <p>• Old magazines and newspapers for collage</p>
       </CardContent>
     </Card>
     <Card>
-      <CardHeader><CardTitle className="text-base font-display">Useful Links</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-base font-display">Helpful links</CardTitle></CardHeader>
       <CardContent className="text-sm text-muted-foreground space-y-2">
         <p>• <a href={meta.academic} className="text-primary hover:underline" target="_blank" rel="noreferrer">IIIT-H Academic Office</a></p>
         <p>• <a href={meta.syllabus} className="text-primary hover:underline" target="_blank" rel="noreferrer">Monsoon 2026 Syllabus (PDF)</a></p>
@@ -692,19 +682,19 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
         <a href="#/overview" onClick={onNavigate} className="flex items-center gap-3 group">
           <span className="size-9 rounded-xl flex items-center justify-center text-white text-sm shadow-sm" style={{ background: "linear-gradient(135deg, #5b3a2e, #c45a2a)" }}><i className="fi fi-rr-diamond"></i></span>
           <div>
-            <p className="font-display font-semibold text-[15px] leading-none tracking-tight group-hover:text-primary transition-colors">Atelier Mitti</p>
+            <p className="font-display font-semibold text-[15px] leading-none tracking-tight group-hover:text-primary transition-colors">Mitti Studio</p>
             <p className="text-[10px] font-mono tracking-widest uppercase text-muted-foreground">OC2.101 · IIIT-H</p>
           </div>
         </a>
-        <p className="text-xs text-muted-foreground leading-relaxed mt-3">Five ateliers · choose one for the semester.</p>
+        <p className="text-xs text-muted-foreground leading-relaxed mt-3">Five studios · pick one for the semester.</p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 space-y-6">
         <nav className="space-y-1">
           <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Studio</p>
           {[
-            { id: "overview", label: "Overview", desc: "Course · Ateliers", icon: "fi fi-rr-overview" },
-            { id: "resources", label: "Resources", desc: "Readings · Links", icon: "fi fi-rr-book-open-cover" },
+            { id: "overview", label: "Overview", desc: "Course · Studios", icon: "fi fi-rr-overview" },
+            { id: "resources", label: "Resources", desc: "Books and links", icon: "fi fi-rr-book-open-cover" },
           ].map((it) => {
             const active = activeId === it.id;
             return (
@@ -720,7 +710,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
         </nav>
 
         <nav className="space-y-1">
-          <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Ateliers · 5</p>
+          <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Studios · 5</p>
           {units.map((u) => {
             const active = activeId === u.id;
             return (
@@ -786,11 +776,11 @@ export function App() {
                 </span>
               </button>
               <nav className="hidden sm:flex items-center gap-2 text-sm min-w-0">
-                <a href="#/overview" className="text-muted-foreground hover:text-foreground transition">Atelier Mitti</a>
+                <a href="#/overview" className="text-muted-foreground hover:text-foreground transition">Mitti Studio</a>
                 <span className="text-muted-foreground/40">/</span>
                 {unit ? (
                   <>
-                    <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-muted-foreground hover:text-foreground transition">Ateliers</a>
+                    <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-muted-foreground hover:text-foreground transition">Studios</a>
                     <span className="text-muted-foreground/40">/</span>
                     <span className="font-medium flex items-center gap-1.5 truncate"><span className="size-5 rounded-full flex items-center justify-center text-white text-[10px] shrink-0" style={{ background: unit.gradient }}><i className={unit.icon}></i></span>{unit.title}</span>
                   </>
@@ -817,8 +807,8 @@ export function App() {
               <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                 <div className="space-y-1.5">
                   <h3 className="font-display font-semibold text-sm">{meta.code}</h3>
-                  <p className="text-xs text-muted-foreground">Coordinator: {meta.coordinator}</p>
-                  <p className="text-xs text-muted-foreground">Five ateliers · choose one for the semester</p>
+                  <p className="text-xs text-muted-foreground">Teacher: {meta.coordinator}</p>
+                  <p className="text-xs text-muted-foreground">Five studios · pick one for the semester</p>
                 </div>
                 <div className="space-y-1.5">
                   <h3 className="font-display font-semibold text-sm">Contact</h3>
