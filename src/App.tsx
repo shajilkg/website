@@ -551,7 +551,7 @@ const Overview = () => (
           <CardContent className="pt-4 text-xs leading-relaxed text-muted-foreground">
             <span className="font-mono tracking-widest uppercase text-[10px]">In this issue</span>
             <ol className="mt-2 space-y-1.5 font-mono text-xs">
-              <li><a href="#/units" className="hover:text-primary"><span className="text-muted-foreground">01</span> The Cut Remembers</a></li>
+              <li><a href="#ateliers" onClick={(e) => { e.preventDefault(); document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} className="hover:text-primary"><span className="text-muted-foreground">01</span> The Cut Remembers — Ateliers</a></li>
               <li><a href="#/music" className="hover:text-primary"><span className="text-muted-foreground">02</span> Raga & Rhythm — Music</a></li>
               <li><a href="#/painting" className="hover:text-primary"><span className="text-muted-foreground">03</span> Painting — Drawing & Colour</a></li>
               <li><a href="#/collage" className="hover:text-primary"><span className="text-muted-foreground">04</span> Collage — Cut & Paste</a></li>
@@ -560,6 +560,12 @@ const Overview = () => (
         </Card>
         <p className="text-[11px] font-mono text-muted-foreground text-center">Printed on 90gsm ivory · bound by hand · no photographs were taken</p>
       </div>
+    </div>
+
+    <div className="hairline" />
+
+    <div id="ateliers" className="scroll-mt-24">
+      <UnitsPortal />
     </div>
 
     <div className="hairline" />
@@ -667,7 +673,7 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
           <p className="relative text-sm opacity-[0.9] mt-2 max-w-[52ch] leading-relaxed text-pretty">{unit.description}</p>
           <div className="relative flex items-center gap-2 mt-5">
             <a href="#works" className="text-xs font-semibold bg-white text-zinc-900 px-4 py-2 rounded-full hover:bg-white/90 transition shadow-sm">View works ↓</a>
-            <a href="#/units" className="text-xs font-medium bg-white/10 backdrop-blur border border-white/20 px-4 py-2 rounded-full hover:bg-white/15 transition">All ateliers</a>
+            <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-xs font-medium bg-white/10 backdrop-blur border border-white/20 px-4 py-2 rounded-full hover:bg-white/15 transition">All ateliers</a>
           </div>
         </div>
         <div className="bg-card px-5 sm:px-6 py-4 flex flex-wrap gap-5 text-xs border-t">
@@ -767,26 +773,6 @@ const UnitDetail = ({ unit, allUnits }: { unit: Unit; allUnits: Unit[] }) => {
   );
 };
 
-const GalleryAll = () => (
-  <div className="space-y-8">
-    <div>
-      <h2 className="text-xl font-display font-semibold tracking-tight">Gallery</h2>
-      <p className="text-sm text-muted-foreground mt-1">All works across ateliers. Each plate is duotone + grain — hover to shift hue like MERIDIAN.</p>
-    </div>
-    {units.map((u) => (
-      <div key={u.id} className="space-y-3">
-        <a href={`#/${u.id}`} className="flex items-center gap-2 group">
-          <span className="size-7 rounded-lg flex items-center justify-center text-white text-xs" style={{ background: u.gradient }}>{u.icon}</span>
-          <h3 className="text-sm font-display font-semibold group-hover:text-primary transition-colors">{u.title}</h3>
-          <span className="text-xs text-muted-foreground">· {u.unit}</span>
-          <span className="text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity ml-1">→</span>
-        </a>
-        <ArtGrid items={u.works} gradient={u.gradient} />
-      </div>
-    ))}
-  </div>
-);
-
 const Resources = () => (
   <div className="space-y-4">
     <Card>
@@ -820,9 +806,7 @@ const Resources = () => (
 /* ── routes ───────────────────────────────────────────────── */
 const routes: { id: string; label: string; page: React.ReactNode }[] = [
   { id: "overview", label: "Overview", page: <Overview /> },
-  { id: "units", label: "Ateliers", page: <UnitsPortal /> },
   ...units.map((u) => ({ id: u.id, label: u.title, page: <UnitDetail unit={u} allUnits={units} /> })),
-  { id: "gallery", label: "Gallery", page: <GalleryAll /> },
   { id: "resources", label: "Resources", page: <Resources /> },
 ];
 function resolve(parts: string[]) {
@@ -849,9 +833,7 @@ function SidebarContent({ activeId, onNavigate }: { activeId: string; onNavigate
         <nav className="space-y-1">
           <p className="text-[10px] font-mono tracking-[0.14em] uppercase text-muted-foreground px-2 mb-1">Studio</p>
           {[
-            { id: "overview", label: "Overview", desc: "Meridian · Issue 07", icon: "○" },
-            { id: "units", label: "Ateliers", desc: "All five · torn paper", icon: "⊞" },
-            { id: "gallery", label: "Gallery", desc: "All works · duotone", icon: "▦" },
+            { id: "overview", label: "Overview", desc: "Issue 07 · Ateliers inside", icon: "○" },
             { id: "resources", label: "Resources", desc: "Readings · Links", icon: "≡" },
           ].map((it) => {
             const active = activeId === it.id;
@@ -938,7 +920,7 @@ export function App() {
                 <span className="text-muted-foreground/40">/</span>
                 {unit ? (
                   <>
-                    <a href="#/units" className="text-muted-foreground hover:text-foreground transition">Ateliers</a>
+                    <a href="#/overview" onClick={(e) => { e.preventDefault(); window.location.hash = "#/overview"; setTimeout(() => document.getElementById("ateliers")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80); }} className="text-muted-foreground hover:text-foreground transition">Ateliers</a>
                     <span className="text-muted-foreground/40">/</span>
                     <span className="font-medium flex items-center gap-1.5 truncate"><span className="size-5 rounded-full flex items-center justify-center text-white text-[10px] shrink-0" style={{ background: unit.gradient }}>{unit.icon}</span>{unit.title}</span>
                   </>
